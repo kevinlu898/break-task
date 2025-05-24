@@ -26,3 +26,8 @@
 #nameInput {
   outline: none;
 }
+
+body {
+  background-color: #1f1f1f;
+  font-family: "DM Sans", sans-serif;
+}
