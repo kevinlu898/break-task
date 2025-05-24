@@ -1,0 +1,28 @@
+.blue-gradient-bg {
+  background: #34347d;
+  background: linear-gradient(
+    10deg,
+    rgb(51, 51, 89) 2%,
+    rgba(35, 35, 77, 1) 74%,
+    rgba(0, 92, 158, 1) 100%
+  );
+}
+
+.center {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+.bigbox {
+  border-radius: 10px;
+  border: 2px solid gray;
+}
+
+#nameInput:focus {
+  outline: none;
+}
+
+#nameInput {
+  outline: none;
+}
