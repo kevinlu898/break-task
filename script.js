@@ -43,8 +43,8 @@ function removeTask(theid) {
   );
 }
 
-window.onload = () => {
-  if (localStorage.getItem("name") == null) {
-    window.location.href = "/intro.html";
-  }
-};
+// window.onload = () => {
+//   if (localStorage.getItem("name") == null) {
+//     window.location.href = "/intro.html";
+//   }
+// };
