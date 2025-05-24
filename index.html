@@ -10,13 +10,44 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
     </head>
     <body>
         <div id="left_dashboard" class="dashboard blue-gradient-bg">
             <h1>BreakTask</h1>
             <div id="action_sidebar">
-                <div id="create_task_button"></div>
+
+                
+
+                <div id="create_task_button" class="button">
+                    <div class="button-content">
+                        <div id="create_task_button_emblem" class="emblem">+</div>
+                        <div id="create_task_button_emblem_text" class="button-text">
+                            <p>Create Task</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="remove_task_button" class="button">
+                    <div class="button-content">
+                        <div id="remove_task_button_emblem" class="emblem">-</div>
+                        <div id="remove_task_button_emblem_text" class="button-text">
+                            <p>Remove Task</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="lock_schedule_button" class="button">
+                    <div class="button-content">
+                        <div id="lock_schedule_button_emblem" class="emblem">🔒</div>
+                        <div id="lock_schedule_button_emblem_text" class="button-text">
+                            <p>Lock Schedule</p>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+
+
+
         </div>
         <div id="task_list" class="gray-bg"></div>
         
