@@ -15,7 +15,8 @@
   border: 1px solid gray;
   color: white;
   background-color: maroon;
-  border-radius: 5px;
+  border-radius: 10px;
+  font-size: xx-large;
 }
 
 .center {
@@ -37,6 +38,7 @@
 
 #nameInput {
   outline: none;
+  font-size: large;
 }
 
 body {
@@ -44,4 +46,8 @@ body {
   place-content: center; /* place items vertically centered */
   background-color: #1f1f1f;
   font-family: "DM Sans", sans-serif;
+}
+
+.white {
+  color: white;
 }
