@@ -8,15 +8,27 @@
   );
 }
 
+.titlething {
+  color: white;
+}
+.buttona {
+  border: 1px solid gray;
+  color: white;
+  background-color: maroon;
+  border-radius: 5px;
+}
+
 .center {
   align-items: center;
-  display: flex;
-  justify-content: center;
+  margin: auto;
+  place-items: center; /* place items horizontally centered */
+  place-content: center; /* place items vertically centered */
 }
 
 .bigbox {
+  padding: 15px;
   border-radius: 10px;
-  border: 2px solid gray;
+  border: 2px solid white;
 }
 
 #nameInput:focus {
@@ -28,6 +40,8 @@
 }
 
 body {
+  place-items: center; /* place items horizontally centered */
+  place-content: center; /* place items vertically centered */
   background-color: #1f1f1f;
   font-family: "DM Sans", sans-serif;
 }
