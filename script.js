@@ -48,9 +48,9 @@ function removeTask(theid) {
 
 window.onload = () => {
   localStorage.setItem("tasks", "[]");
-  if (localStorage.getItem("name") == null) {
-    window.location.href = "/intro.html";
-  }
+  // if (localStorage.getItem("name") == null) {
+  //   window.location.href = "/intro.html";
+  // }
 
   addTask("skull");
 

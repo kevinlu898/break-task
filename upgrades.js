@@ -161,7 +161,9 @@ const chests = [
 // If no Last Date, default date to zero
 function setChests() {
   if (!localStorage.getItem("lastChest")) {
-    getDailyChest();
+    if (!localStorage.getItem("lastChest")) {
+      getDailyChest();
+    }
   }
 }
 
@@ -170,17 +172,30 @@ function displayAlert(message) {
   console.log(message); // Replace with UI alert logic
 }
 
+// Function to get the daily chest and apply its effect
 function getDailyChest() {
-  const todayChest = Math.floor(Math.random() * chests.length);
+  const todayChestIndex = Math.floor(Math.random() * chests.length);
+  const todayChest = chests[todayChestIndex];
+  localStorage.setItem("lastChest", todayChest.name);
   alert(`Today's chest: ${todayChest.name} - ${todayChest.description}`);
-  // Retrieve the random event and apply its effect
-  const randomEventMessage = localStorage.getItem("randomEventMessage");
-  const event = randomEvents.find((e) => e.description === randomEventMessage);
-  if (event && typeof event.effect === "function") {
-    event.effect();
+  if (todayChest.effect && typeof todayChest.effect === "function") {
+    todayChest.effect();
   }
 }
 
+// Check if the last chest was opened today
 window.onload = function () {
-  getDailyChest();
+  setChests();
 };
+
+// Clear the value of lastChest at midnight
+function clearLastChestAtMidnight() {
+  const now = new Date();
+  const timeUntilMidnight =
+    new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0) -
+    now;
+  setTimeout(() => {
+    localStorage.removeItem("lastChest");
+  }, timeUntilMidnight);
+}
+clearLastChestAtMidnight();
