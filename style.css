@@ -20,6 +20,7 @@ h1 {
     margin-right: 0;
     padding: 15px;
     border-radius: 15px;
+    box-sizing: border-box;
 }
 
 .no-margin {
@@ -33,7 +34,7 @@ h1 {
 
 .blue-gradient-bg {
     background: #34347d;
-    background: linear-gradient(10deg, rgb(51, 51, 89) 2%, rgba(35, 35, 77, 1) 74%, rgba(0, 92, 158, 1) 100%);
+    background: linear-gradient(10deg, #333359 2%, #23234d 74%, #005c9e 100%);
 }
 
 .gray-bg {
@@ -47,8 +48,14 @@ h1 {
     color: #fff;
 }
 
+.display {
+    background-color: #1c1c43;
+    border-radius: 15px;
+    padding: 0 10px;
+}
+
 .button {
-    background-color: rgb(28, 28, 67);
+    background-color: #1c1c43;
     border-radius: 15px;
     padding: 0 10px;
     transition: all 0.3s ease;
@@ -58,12 +65,12 @@ h1 {
 }
 
 .button:hover {
-    background: linear-gradient(0deg, rgb(52, 52, 125) 2%, rgb(35, 35, 77) 60%, rgb(0, 73, 125) 100%);
+    background: linear-gradient(0deg, #34347d 2%, #23234d 60%, #00497d 100%);
     transform: translateY(-1px);
 }
 
 .button:active {
-    background: linear-gradient(0deg, rgb(26, 26, 58) 2%, rgb(26, 26, 58) 60%, rgb(0, 55, 95) 100%);
+    background: linear-gradient(0deg, #1a1a3a 2%, #1a1a3a 60%, #00375f 100%);
     transform: translateY(1px);
 }
 
@@ -88,6 +95,9 @@ h1 {
     text-align: center;
 }
 
+.fit-width {
+    width: 100%;
+}
 
 
 #action_sidebar {
@@ -95,4 +105,9 @@ h1 {
     flex-direction: column;
     gap: 10px;
     margin-top: 20px;
+}
+
+#player_stats {
+    padding: 10px;
+    box-sizing: border-box;
 }
