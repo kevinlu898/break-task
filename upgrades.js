@@ -19,45 +19,130 @@ const chests = [
     },
   },
   {
-    name: "Gain coins",
+    name: "Gain 1 coin",
     description: "You've gained 1 coin!",
     effect: () => {
         const coins = localStorage.getItem("coins");
-        coins += 1
+        coins += 1;
         localStorage.setItem("coins", coins);
     },
   },
   {
-    name: "Mystery Box",
-    description: "Who knows what's inside?",
-    effect: "effect4",
+    name: "Gain 2 coins",
+    description: "You've gained 2 coins!",
+    effect: () => {
+        const coins = localStorage.getItem("coins");
+        coins += 2;
+        localStorage.setItem("coins", coins);
+    },
   },
   {
-    name: "Ancient Relic",
-    description: "An artifact from a forgotten time.",
-    effect: "effect5",
+    name: "Gain 3 coins",
+    description: "You've gained 3 coins!",
+    effect: () => {
+        const coins = localStorage.getItem("coins");
+        coins += 3;
+        localStorage.setItem("coins", coins);
+    },
+  },
+  {
+    name: "Gain 4 coins",
+    description: "You've gained 4 coins!",
+    effect: () => {
+        const coins = localStorage.getItem("coins");
+        coins += 4;
+        localStorage.setItem("coins", coins);
+    },
+  },
+  {
+    name: "Gain 5 coins",
+    description: "You've gained 5 coins!",
+    effect: () => {
+        const coins = localStorage.getItem("coins");
+        coins += 5;
+        localStorage.setItem("coins", coins);
+    },
+  },
+  {
+    name: "Gain 6 coins",
+    description: "You've gained 6 coins!",
+    effect: () => {
+        const coins = localStorage.getItem("coins");
+        coins += 6;
+        localStorage.setItem("coins", coins);
+    },
+  },
+  {
+    name: "Gain 7 coins",
+    description: "You've gained 7 coins!",
+    effect: () => {
+        const coins = localStorage.getItem("coins");
+        coins += 7;
+        localStorage.setItem("coins", coins);
+    },
+  },
+  {
+    name: "Gain 8 coins",
+    description: "You've gained 8 coins!",
+    effect: () => {
+        const coins = localStorage.getItem("coins");
+        coins += 8;
+        localStorage.setItem("coins", coins);
+    },
+  },
+  {
+    name: "Gain 9 coins",
+    description: "You've gained 9 coins!",
+    effect: () => {
+        const coins = localStorage.getItem("coins");
+        coins += 9;
+        localStorage.setItem("coins", coins);
+    },
+  },
+  {
+    name: "Gain 10 coins",
+    description: "You've gained 10 coins!",
+    effect: () => {
+        const coins = localStorage.getItem("coins");
+        coins += 10;
+        localStorage.setItem("coins", coins);
+    },
+  },
+  {
+    name: "Coins Boost",
+    description: "Coins increase by 1.3x",
+    effect: () => {
+        const coins = localStorage.getItem("coins");
+        coins += coins * 0.3;
+        localStorage.setItem("coins", coins);
+    },
+  },
+  {
+    name: "Coins Boost",
+    description: "Coins increase by 1.5x",
+    effect: () => {
+        const coins = localStorage.getItem("coins");
+        coins += coins * 0.5;
+        localStorage.setItem("coins", coins);
+    },
   },
 ];
 
-// Random chest daily
-function chooseDailyChest() {
-  const date = new Date();
-  localStorage.setItem("lastDate", date.toISOString().split("T")[0]);
-  const lastDate = localStorage.getItem("lastDate");
-  if (date - lastDate > 86400000) {
-    const randomIndex = Math.floor(Math.random() * chests.length);
-    return chests[randomIndex];
-  } else {
-    return;
-  }
+
+// If no Last Date, default date to zero
+function setChests() {
+if (!localStorage.getItem("lastChest")) {
+    getDailyChest();
 }
+}
+
 function displayAlert(message) {
   // This function will display alert in the game UI
   console.log(message); // Replace with UI alert logic
 }
 
 function getDailyChest() {
-  const todayChest = chooseDailyChest();
+  const todayChest = Math.floor(Math.random() * chests.length);
   alert(`Today's chest: ${todayChest.name} - ${todayChest.description}`);
   // Retrieve the random event and apply its effect
   const randomEventMessage = localStorage.getItem("randomEventMessage");
