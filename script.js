@@ -27,7 +27,6 @@ function resetDefault() {
 
 window.onload = () => {
   if (localStorage.getItem("name") == null) {
-    alert("test test message");
     window.location.href = "/intro.html";
   }
 };
