@@ -1,10 +1,40 @@
 // Upgrades list
 const upgrades = [
   {
-    name: "Upgrade 1",
-    description: "Upgrade",
-    cost: "100",
-    effect: "effect1",
+    name: "10 Minute Break",
+    description: "Feeling tired? Buy a break with coins!",
+    cost: 100,
+    effect: () => {
+      const val = Number(localStorage.getItem("coins"));
+      if (val - 100 >= 0) {
+        localStorage.setItem("coins", val - 100);
+        localStorage.setItem(
+          "breaktime",
+          Number(localStorage.getItem("breaktime")) + 10
+        );
+        alert("Purchased!");
+      } else {
+        alert("You don't have enough coins to purchase! Try again later.");
+      }
+    },
+  },
+  {
+    name: "30 Minute Break",
+    description: "Feeling tired? Buy a break with coins!",
+    cost: 300,
+    effect: () => {
+      const val = Number(localStorage.getItem("coins"));
+      if (val - 100 >= 0) {
+        localStorage.setItem("coins", val - 300);
+        localStorage.setItem(
+          "breaktime",
+          Number(localStorage.getItem("breaktime")) + 30
+        );
+        alert("Purchased!");
+      } else {
+        alert("You don't have enough coins to purchase! Try again later.");
+      }
+    },
   },
 ];
 
@@ -22,118 +52,117 @@ const chests = [
     name: "Gain 1 coin",
     description: "You've gained 1 coin!",
     effect: () => {
-        const coins = localStorage.getItem("coins");
-        coins += 1;
-        localStorage.setItem("coins", coins);
+      const coins = Number(localStorage.getItem("coins"));
+      coins += 1;
+      localStorage.setItem("coins", coins);
     },
   },
   {
     name: "Gain 2 coins",
     description: "You've gained 2 coins!",
     effect: () => {
-        const coins = localStorage.getItem("coins");
-        coins += 2;
-        localStorage.setItem("coins", coins);
+      const coins = Number(localStorage.getItem("coins"));
+      coins += 2;
+      localStorage.setItem("coins", coins);
     },
   },
   {
     name: "Gain 3 coins",
     description: "You've gained 3 coins!",
     effect: () => {
-        const coins = localStorage.getItem("coins");
-        coins += 3;
-        localStorage.setItem("coins", coins);
+      const coins = Number(localStorage.getItem("coins"));
+      coins += 3;
+      localStorage.setItem("coins", coins);
     },
   },
   {
     name: "Gain 4 coins",
     description: "You've gained 4 coins!",
     effect: () => {
-        const coins = localStorage.getItem("coins");
-        coins += 4;
-        localStorage.setItem("coins", coins);
+      const coins = Number(localStorage.getItem("coins"));
+      coins += 4;
+      localStorage.setItem("coins", coins);
     },
   },
   {
     name: "Gain 5 coins",
     description: "You've gained 5 coins!",
     effect: () => {
-        const coins = localStorage.getItem("coins");
-        coins += 5;
-        localStorage.setItem("coins", coins);
+      const coins = Number(localStorage.getItem("coins"));
+      coins += 5;
+      localStorage.setItem("coins", coins);
     },
   },
   {
     name: "Gain 6 coins",
     description: "You've gained 6 coins!",
     effect: () => {
-        const coins = localStorage.getItem("coins");
-        coins += 6;
-        localStorage.setItem("coins", coins);
+      const coins = Number(localStorage.getItem("coins"));
+      coins += 6;
+      localStorage.setItem("coins", coins);
     },
   },
   {
     name: "Gain 7 coins",
     description: "You've gained 7 coins!",
     effect: () => {
-        const coins = localStorage.getItem("coins");
-        coins += 7;
-        localStorage.setItem("coins", coins);
+      const coins = Number(localStorage.getItem("coins"));
+      coins += 7;
+      localStorage.setItem("coins", coins);
     },
   },
   {
     name: "Gain 8 coins",
     description: "You've gained 8 coins!",
     effect: () => {
-        const coins = localStorage.getItem("coins");
-        coins += 8;
-        localStorage.setItem("coins", coins);
+      const coins = Number(localStorage.getItem("coins"));
+      coins += 8;
+      localStorage.setItem("coins", coins);
     },
   },
   {
     name: "Gain 9 coins",
     description: "You've gained 9 coins!",
     effect: () => {
-        const coins = localStorage.getItem("coins");
-        coins += 9;
-        localStorage.setItem("coins", coins);
+      const coins = Number(localStorage.getItem("coins"));
+      coins += 9;
+      localStorage.setItem("coins", coins);
     },
   },
   {
     name: "Gain 10 coins",
     description: "You've gained 10 coins!",
     effect: () => {
-        const coins = localStorage.getItem("coins");
-        coins += 10;
-        localStorage.setItem("coins", coins);
+      const coins = Number(localStorage.getItem("coins"));
+      coins += 10;
+      localStorage.setItem("coins", coins);
     },
   },
   {
     name: "Coins Boost",
     description: "Coins increase by 1.3x",
     effect: () => {
-        const coins = localStorage.getItem("coins");
-        coins += coins * 0.3;
-        localStorage.setItem("coins", coins);
+      const coins = Number(localStorage.getItem("coins"));
+      coins += coins * 0.3;
+      localStorage.setItem("coins", coins);
     },
   },
   {
     name: "Coins Boost",
     description: "Coins increase by 1.5x",
     effect: () => {
-        const coins = localStorage.getItem("coins");
-        coins += coins * 0.5;
-        localStorage.setItem("coins", coins);
+      const coins = Number(localStorage.getItem("coins"));
+      coins += coins * 0.5;
+      localStorage.setItem("coins", coins);
     },
   },
 ];
 
-
 // If no Last Date, default date to zero
 function setChests() {
-if (!localStorage.getItem("lastChest")) {
+  if (!localStorage.getItem("lastChest")) {
     getDailyChest();
-}
+  }
 }
 
 function displayAlert(message) {
