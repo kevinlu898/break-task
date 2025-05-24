@@ -30,21 +30,32 @@ function resetDefault() {
 }
 
 function addTask(name) {
-  const listrn = localStorage.getItem("tasks");
-  localStorage.setItem("tasks", [...listrn, { name: name, id: id }]);
+  const listrn = JSON.parse(localStorage.getItem("tasks"));
+  localStorage.setItem(
+    "tasks",
+    JSON.stringify([...listrn, { name: name, id: localStorage.getItem`id` }])
+  );
   const curid = localStorage.getItem("id");
   localStorage.setItem("id", curid + 1);
 }
 function removeTask(theid) {
-  const listrn = localStorage.getItem("tasks");
+  const listrn = JSON.parse(localStorage.getItem("tasks"));
   localStorage.setItem(
     "tasks",
-    listrn.filter((x) => x.id != theid)
+    JSON.stringify(listrn.filter((x) => x.id != theid))
   );
 }
 
 window.onload = () => {
+  localStorage.setItem("tasks", "[]");
   if (localStorage.getItem("name") == null) {
     window.location.href = "/intro.html";
   }
+
+  addTask("skull");
+
+  const thetasklist = document.getElementById("task_list");
+  JSON.parse(localStorage.getItem("tasks")).forEach((element) => {
+    thetasklist.innerHTML += `<div>${element.name}</div>`;
+  });
 };
