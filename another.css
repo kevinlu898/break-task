@@ -1,0 +1,6 @@
+/* We'll copy and paste this into style.css so there arent merge conflicts trust*/
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
