@@ -8,24 +8,31 @@ body {
 }
 
 h1 {
-    font-size: 400%;
+    font-size: 4.5rem;
     font-weight: 600;
     color: #fff;
     margin: 0;
 }
 
-#left_dashboard {
+.dashboard {
     width: 20%;
-    background: #34347d; 
-    background: linear-gradient(10deg,rgb(51, 51, 89) 2%, rgba(35, 35, 77, 1) 74%, rgba(0, 92, 158, 1) 100%);
     margin: 15px;
     margin-right: 0;
     padding: 15px;
     border-radius: 15px;
 }
+
+.blue-gradient-bg {
+    background: #34347d; 
+    background: linear-gradient(10deg,rgb(51, 51, 89) 2%, rgba(35, 35, 77, 1) 74%, rgba(0, 92, 158, 1) 100%);
+}
+
+.gray-bg {
+    background-color: #282828;
+}
+
 #task_list {
     flex: 1;
-    background-color: #282828;
     margin: 15px;
     padding: 15px;
     border-radius: 15px;
