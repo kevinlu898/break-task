@@ -25,10 +25,6 @@ function resetDefault() {
   localStorage.set("name", "");
 }
 
-function initCharacter(name) {
-  localStorage.setItem("name", name);
-}
-
 resetDefault();
 
 window.onload = () => {
