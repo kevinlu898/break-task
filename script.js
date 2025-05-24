@@ -25,10 +25,9 @@ function resetDefault() {
   localStorage.set("name", "");
 }
 
-resetDefault();
-
 window.onload = () => {
-  if (!localStorage.getItem("name")) {
+  if (localStorage.getItem("name") == null) {
+    alert("test test message");
     window.location.href = "/intro.html";
   }
 };
