@@ -29,33 +29,67 @@ function resetDefault() {
   localStorage.set("id", 0);
 }
 
+function render() {
+  const thetasklist = document.getElementById("task_list");
+  thetasklist.innerHTML = "";
+  JSON.parse(localStorage.getItem("tasks")).forEach((element) => {
+    if (!element.locked) {
+    thetasklist.innerHTML += `
+                <div class="task-item">
+                    ${element.name}
+                    <div class="emblem-container justify-right">
+                      <div class="emblem-container-inner">
+                        <img class="svg-emblem" src="ass_ets/unlock.svg" alt="unlock" onclick="lockTask(${element.id})"/>
+                        <img class="svg-emblem" src="ass_ets/close-x.svg" alt="Remove" onclick="removeTask(${element.id})"/>
+                    </div>
+                </div> `;
+    } else {
+      thetasklist.innerHTML += `
+                <div class="task-item">
+                    ${element.name}
+                    <div class="emblem-container justify-right">
+                      <div class="emblem-container-inner">
+                        <img class="svg-emblem" src="ass_ets/lock.svg" alt="lock" onclick="lockTask(${element.id})"/>
+                        <img class="svg-emblem" src="ass_ets/close-x.svg" alt="Remove" onclick="removeTask(${element.id})"/>
+                    </div>
+                </div> `;
+    }
+  });
+}
+
 function addTask(name) {
   const listrn = JSON.parse(localStorage.getItem("tasks"));
   localStorage.setItem(
     "tasks",
-    JSON.stringify([...listrn, { name: name, id: localStorage.getItem`id` }])
+    JSON.stringify([...listrn, { name: name, id: localStorage.getItem`id`, locked: false}])
   );
-  const curid = localStorage.getItem("id");
+  const curid = Number(localStorage.getItem("id"));
   localStorage.setItem("id", curid + 1);
+  render();
 }
+
 function removeTask(theid) {
   const listrn = JSON.parse(localStorage.getItem("tasks"));
   localStorage.setItem(
     "tasks",
     JSON.stringify(listrn.filter((x) => x.id != theid))
   );
+  render();
+}
+
+function lockTask(theid) {
+  const listrn = JSON.parse(localStorage.getItem("tasks"));
+  localStorage.setItem("tasks", JSON.stringify(listrn.map(x => x.id == theid ? {...x, locked: !x.locked} : x)));
+  render();
 }
 
 window.onload = () => {
   localStorage.setItem("tasks", "[]");
+  localStorage.setItem("id", 0);
   // if (localStorage.getItem("name") == null) {
   //   window.location.href = "/intro.html";
   // }
 
-  addTask("skull");
-
-  const thetasklist = document.getElementById("task_list");
-  JSON.parse(localStorage.getItem("tasks")).forEach((element) => {
-    thetasklist.innerHTML += `<div>${element.name}</div>`;
-  });
+  addTask("💀");
+  addTask("hi");
 };

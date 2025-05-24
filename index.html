@@ -27,17 +27,11 @@
                         </div>
                     </div>
                 </div>
-                <div id="remove_task_button" class="button">
-                    <div class="button-content">
-                        <div id="remove_task_button_emblem" class="emblem">-</div>
-                        <div id="remove_task_button_emblem_text" class="button-text">
-                            <p>Remove Task</p>
-                        </div>
-                    </div>
-                </div>
                 <div id="lock_schedule_button" class="button">
                     <div class="button-content">
-                        <div id="lock_schedule_button_emblem" class="emblem"></div>
+                        <div id="lock_schedule_button_emblem" class="emblem-container-no-fullwidth">
+                            <img src="ass_ets/lock.svg" alt="lock" class="svg-emblem">
+                        </div>
                         <div id="lock_schedule_button_emblem_text" class="button-text">
                             <p>Lock Schedule</p>
                         </div>
@@ -60,9 +54,14 @@
 
 
         </div>
-        <div id="task_list" class="gray-bg">
-            <div id="task_title" class="gray-bg dashboard">
+        <div id="task_lis_container" class="gray-bg container">
+            <div id="task_title" class="gray-bg">
                 <h1>Tasks</h1>
+            </div>
+            <div id="task_list" class="gray-bg">
+                <!--styling div in HTML to be moved to JS-->
+                <div class="task-item">
+                </div>
             </div>
         </div>
         
