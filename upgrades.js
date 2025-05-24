@@ -4,6 +4,7 @@ const upgrades = [
     name: "10 Minute Break",
     description: "Feeling tired? Buy a break with coins!",
     cost: 100,
+    id: 0,
     effect: () => {
       const val = Number(localStorage.getItem("coins"));
       if (val - 100 >= 0) {
@@ -22,6 +23,7 @@ const upgrades = [
     name: "30 Minute Break",
     description: "Feeling tired? Buy a break with coins!",
     cost: 300,
+    id: 1,
     effect: () => {
       const val = Number(localStorage.getItem("coins"));
       if (val - 100 >= 0) {
@@ -183,9 +185,22 @@ function getDailyChest() {
   }
 }
 
+function doStuff(id) {
+  upgrades[id].effect();
+}
+
 // Check if the last chest was opened today
 window.onload = function () {
   setChests();
+  const tochangething = document.getElementById("upgradecont");
+  upgrades.forEach((x) => {
+    tochangething.innerHTML += `
+    <div class="upgrade" onclick="doStuff(${x.id})">
+          <h2>${x.name}</h2>
+          <p>${x.description}</p>
+        </div>`;
+  });
+  tochangething;
 };
 
 // Clear the value of lastChest at midnight

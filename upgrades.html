@@ -15,29 +15,29 @@
     />
   </head>
   <style>
-.upgrade-container {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); 
-    gap: 1rem; 
-    justify-items: center;
-    align-items: center;
-  }
+    .upgrade-container {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      justify-items: center;
+      align-items: center;
+    }
 
-  .upgrade {
-    margin: 0; 
-    background: #eefbff;
-    width: 85%; 
-    padding: 20px;
-    border-radius: 15px;
-    border: 1px solid #bde0f7;
-    cursor: pointer;
-  } 
+    .upgrade {
+      margin: 0;
+      background: #eefbff;
+      width: 85%;
+      padding: 20px;
+      border-radius: 15px;
+      border: 1px solid #bde0f7;
+      cursor: pointer;
+    }
 
-  .upgrade:hover {
-    transform: scale(1.05); /* Slightly enlarge the upgrade box */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a shadow effect */
-    background: #d9f4ff; /* Change background color on hover */
-  }
+    .upgrade:hover {
+      transform: scale(1.05); /* Slightly enlarge the upgrade box */
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a shadow effect */
+      background: #d9f4ff; /* Change background color on hover */
+    }
   </style>
   <body>
     <!-- Left Dashboard/Nav-->
@@ -49,18 +49,9 @@
     </div>
     <!-- Main Content -->
     <div id="task_list" class="gray-bg">
-      <h1>Upgrades</h1> <br><br><br>
-      <div class="upgrade-container">
-        <div id="upgrade-1" class="upgrade">
-          <h2>Upgrade</h2>
-          <p>Increase your task speed by 5%.</p>
-        </div>
-        <div id="upgrade-2" class="upgrade">
-            <h2>Upgrade 1: Task Efficiency</h2>
-            <p>Increase your task efficiency by 10%.</p>
-          </div>
-      </div>
-
+      <h1>Upgrades</h1>
+      <br /><br /><br />
+      <div class="upgrade-container" id="upgradecont"></div>
     </div>
 
     <script src="script.js" async defer></script>
