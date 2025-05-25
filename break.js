@@ -3,16 +3,17 @@ const upgrades = [
   {
     name: "10 Minute Break",
     description: "Feeling tired? Buy a break with coins!",
-    cost: 100,
+    cost: 5,
     id: 0,
     effect: () => {
-      const val = Number(localStorage.getItem("coins"));
-      if (val - 100 >= 0) {
-        localStorage.setItem("coins", val - 100);
+      const coins = Number(localStorage.getItem("coins") || 0);
+      if (coins - 5 >= 0) {
+        localStorage.setItem("coins", coins - 5);
         localStorage.setItem(
-          "breaktime",
-          Number(localStorage.getItem("breaktime")) + 10
+          "breakTime",
+          Number(localStorage.getItem("breakTime") || 0) + 10
         );
+        updateStats();
         alert("Purchased!");
       } else {
         alert("You don't have enough coins to purchase! Try again later.");
@@ -22,16 +23,17 @@ const upgrades = [
   {
     name: "30 Minute Break",
     description: "Feeling tired? Buy a break with coins!",
-    cost: 300,
+    cost: 15,
     id: 1,
     effect: () => {
-      const val = Number(localStorage.getItem("coins"));
-      if (val - 100 >= 0) {
-        localStorage.setItem("coins", val - 300);
+      const coins = Number(localStorage.getItem("coins") || 0);
+      if (coins - 15 >= 0) {
+        localStorage.setItem("coins", coins - 15);
         localStorage.setItem(
-          "breaktime",
-          Number(localStorage.getItem("breaktime")) + 30
+          "breakTime",
+          Number(localStorage.getItem("breakTime") || 0) + 30
         );
+        updateStats();
         alert("Purchased!");
       } else {
         alert("You don't have enough coins to purchase! Try again later.");
@@ -43,119 +45,119 @@ const upgrades = [
 // Chests list
 const chests = [
   {
-    name: "Jepordy",
+    name: "Jeopardy",
     description:
-      "You will recieve two times the coins when you complete a task, but lose the coins if you don't.",
+      "You will receive two times the coins when you complete a task, but lose the coins if you don't.",
     effect: () => {
-      localStorage.setItem("jerpordy", true);
+      localStorage.setItem("jeopardy", true);
     },
   },
   {
     name: "Gain 1 coin",
     description: "You've gained 1 coin!",
     effect: () => {
-      const coins = Number(localStorage.getItem("coins"));
-      coins += 1;
-      localStorage.setItem("coins", coins);
+      const coins = Number(localStorage.getItem("coins") || 0);
+      localStorage.setItem("coins", coins + 1);
+      updateStats();
     },
   },
   {
     name: "Gain 2 coins",
     description: "You've gained 2 coins!",
     effect: () => {
-      const coins = Number(localStorage.getItem("coins"));
-      coins += 2;
-      localStorage.setItem("coins", coins);
+      const coins = Number(localStorage.getItem("coins") || 0);
+      localStorage.setItem("coins", coins + 2);
+      updateStats();
     },
   },
   {
     name: "Gain 3 coins",
     description: "You've gained 3 coins!",
     effect: () => {
-      const coins = Number(localStorage.getItem("coins"));
-      coins += 3;
-      localStorage.setItem("coins", coins);
+      const coins = Number(localStorage.getItem("coins") || 0);
+      localStorage.setItem("coins", coins + 3);
+      updateStats();
     },
   },
   {
     name: "Gain 4 coins",
     description: "You've gained 4 coins!",
     effect: () => {
-      const coins = Number(localStorage.getItem("coins"));
-      coins += 4;
-      localStorage.setItem("coins", coins);
+      const coins = Number(localStorage.getItem("coins") || 0);
+      localStorage.setItem("coins", coins + 4);
+      updateStats();
     },
   },
   {
     name: "Gain 5 coins",
     description: "You've gained 5 coins!",
     effect: () => {
-      const coins = Number(localStorage.getItem("coins"));
-      coins += 5;
-      localStorage.setItem("coins", coins);
+      const coins = Number(localStorage.getItem("coins") || 0);
+      localStorage.setItem("coins", coins + 5);
+      updateStats();
     },
   },
   {
     name: "Gain 6 coins",
     description: "You've gained 6 coins!",
     effect: () => {
-      const coins = Number(localStorage.getItem("coins"));
-      coins += 6;
-      localStorage.setItem("coins", coins);
+      const coins = Number(localStorage.getItem("coins") || 0);
+      localStorage.setItem("coins", coins + 6);
+      updateStats();
     },
   },
   {
     name: "Gain 7 coins",
     description: "You've gained 7 coins!",
     effect: () => {
-      const coins = Number(localStorage.getItem("coins"));
-      coins += 7;
-      localStorage.setItem("coins", coins);
+      const coins = Number(localStorage.getItem("coins") || 0);
+      localStorage.setItem("coins", coins + 7);
+      updateStats();
     },
   },
   {
     name: "Gain 8 coins",
     description: "You've gained 8 coins!",
     effect: () => {
-      const coins = Number(localStorage.getItem("coins"));
-      coins += 8;
-      localStorage.setItem("coins", coins);
+      const coins = Number(localStorage.getItem("coins") || 0);
+      localStorage.setItem("coins", coins + 8);
+      updateStats();
     },
   },
   {
     name: "Gain 9 coins",
     description: "You've gained 9 coins!",
     effect: () => {
-      const coins = Number(localStorage.getItem("coins"));
-      coins += 9;
-      localStorage.setItem("coins", coins);
+      const coins = Number(localStorage.getItem("coins") || 0);
+      localStorage.setItem("coins", coins + 9);
+      updateStats();
     },
   },
   {
     name: "Gain 10 coins",
     description: "You've gained 10 coins!",
     effect: () => {
-      const coins = Number(localStorage.getItem("coins"));
-      coins += 10;
-      localStorage.setItem("coins", coins);
+      const coins = Number(localStorage.getItem("coins") || 0);
+      localStorage.setItem("coins", coins + 10);
+      updateStats();
     },
   },
   {
     name: "Coins Boost",
     description: "Coins increase by 1.3x",
     effect: () => {
-      const coins = Number(localStorage.getItem("coins"));
-      coins += coins * 0.3;
-      localStorage.setItem("coins", coins);
+      const coins = Number(localStorage.getItem("coins") || 0);
+      localStorage.setItem("coins", Math.floor(coins * 1.3));
+      updateStats();
     },
   },
   {
     name: "Coins Boost",
     description: "Coins increase by 1.5x",
     effect: () => {
-      const coins = Number(localStorage.getItem("coins"));
-      coins += coins * 0.5;
-      localStorage.setItem("coins", coins);
+      const coins = Number(localStorage.getItem("coins") || 0);
+      localStorage.setItem("coins", Math.floor(coins * 1.5));
+      updateStats();
     },
   },
 ];
@@ -163,9 +165,7 @@ const chests = [
 // If no Last Date, default date to zero
 function setChests() {
   if (!localStorage.getItem("lastChest")) {
-    if (!localStorage.getItem("lastChest")) {
-      getDailyChest();
-    }
+    getDailyChest();
   }
 }
 
@@ -189,28 +189,180 @@ function doStuff(id) {
   upgrades[id].effect();
 }
 
-// Check if the last chest was opened today
-window.onload = function () {
+// Add updateStats function to match script.js
+function updateStats() {
+    const coins = Number(localStorage.getItem("coins") || 0);
+    const breakTime = Number(localStorage.getItem("breakTime") || 0);
+    
+    // Update coins display - handle both pages
+    const coinsDisplays = document.querySelectorAll('.flex-container p');
+    coinsDisplays.forEach(display => {
+        if (display && display.textContent.includes('Coins:')) {
+            display.textContent = `Coins: ${Math.round(coins)}`;
+        }
+    });
+    
+    // Update break time display - handle both pages
+    const breakTimeDisplays = document.querySelectorAll('#points-container p');
+    breakTimeDisplays.forEach(display => {
+        if (display && display.textContent.includes('Break time:')) {
+            // Round to avoid floating point issues
+            const roundedBreakTime = Math.round(breakTime * 60) / 60; // Round to nearest second
+            const minutes = Math.floor(Math.abs(roundedBreakTime));
+            const seconds = Math.floor((Math.abs(roundedBreakTime) - minutes) * 60);
+            const displayText = roundedBreakTime < 0 ? 
+                `Break time: -${minutes}:${seconds.toString().padStart(2, '0')} (${Math.abs(Math.round(roundedBreakTime))} coins debt)` : 
+                `Break time: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+            display.textContent = displayText;
+        }
+    });
+}
+
+// Add break time timer handling
+let breakTimeTimerBreak = null;
+
+function startBreakTimeTimer() {
+    if (breakTimeTimerBreak) return; // Don't start if already running
+    
+    breakTimeTimerBreak = setInterval(() => {
+        const breakTime = Number(localStorage.getItem("breakTime") || 0);
+        const coins = Number(localStorage.getItem("coins") || 0);
+        
+        // Decrease break time by 1/60th of a minute (1 second)
+        const newBreakTime = breakTime - (1/60);
+        localStorage.setItem("breakTime", newBreakTime);
+        
+        // If break time goes negative, deduct coins every minute
+        if (newBreakTime < 0 && coins > 0 && Math.floor(newBreakTime) !== Math.floor(breakTime)) {
+            localStorage.setItem("coins", coins - 1);
+        }
+        
+        updateStats();
+    }, 1000); // Run every second
+}
+
+function stopBreakTimeTimer() {
+    if (breakTimeTimerBreak) {
+        clearInterval(breakTimeTimerBreak);
+        breakTimeTimerBreak = null;
+    }
+}
+
+// Add task state checking function
+function checkTaskStates() {
+    const tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
+    let tasksUpdated = false;
+    
+    tasks.forEach(task => {
+        if (task.running) {
+            // Calculate time passed since last update
+            const now = Date.now();
+            const lastUpdate = task.lastUpdate || now;
+            const timePassed = (now - lastUpdate) / 1000; // Convert to seconds
+            
+            // Update remaining time
+            task.time = Math.max(0, task.time - (timePassed / 60)); // Convert seconds to minutes
+            
+            // If task is complete, grant coins
+            if (task.time <= 0) {
+                const coins = Number(localStorage.getItem("coins") || 0);
+                const minutes = Math.ceil(task.originalTime / 60);
+                localStorage.setItem("coins", coins + minutes);
+                task.running = false;
+                tasksUpdated = true;
+            } else {
+                task.lastUpdate = now;
+                tasksUpdated = true;
+            }
+        }
+    });
+    
+    if (tasksUpdated) {
+        localStorage.setItem("tasks", JSON.stringify(tasks));
+    }
+}
+
+// Initialize the page
+function initializePage() {
+  console.log('Initializing page...');
   setChests();
-  const tochangething = document.getElementById("upgradecont");
-  upgrades.forEach((x) => {
-    tochangething.innerHTML += `
-    <div class="upgrade" onclick="doStuff(${x.id})">
+  
+  // Clear and initialize the upgrade container
+  const upgradeContainer = document.getElementById("upgradecont");
+  console.log('Upgrade container found:', upgradeContainer);
+  
+  if (upgradeContainer) {
+    console.log('Rendering upgrades...');
+    upgradeContainer.innerHTML = ""; // Clear existing content
+    upgrades.forEach((x) => {
+      console.log('Rendering upgrade:', x.name);
+      upgradeContainer.innerHTML += `
+        <div class="upgrade" onclick="doStuff(${x.id})">
           <h2>${x.name}</h2>
           <p>${x.description}</p>
+          <p>Cost: ${x.cost} coins</p>
         </div>`;
+    });
+    console.log('Finished rendering upgrades');
+  } else {
+    console.error('Upgrade container not found!');
+  }
+  
+  // Check task states when loading the page
+  checkTaskStates();
+  
+  // Get current tasks
+  const tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
+  
+  // Clear any existing timers
+  if (breakTimeTimerBreak) {
+    clearInterval(breakTimeTimerBreak);
+    breakTimeTimerBreak = null;
+  }
+  
+  // Start break time timer if no tasks are running
+  if (!tasks.some(task => task.running)) {
+    startBreakTimeTimer();
+  }
+  
+  updateStats();
+}
+
+// Wait for both scripts to load and DOM to be ready
+console.log('Document ready state:', document.readyState);
+if (document.readyState === 'loading') {
+  console.log('Document still loading, waiting for DOMContentLoaded...');
+  document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOMContentLoaded fired');
+    initializePage();
   });
-  tochangething;
-};
+} else {
+  console.log('Document already loaded, initializing immediately');
+  initializePage();
+}
+
+// Also try window.onload as a backup
+window.addEventListener('load', () => {
+  console.log('Window load event fired');
+  // Only initialize if the container is still empty
+  const upgradeContainer = document.getElementById("upgradecont");
+  if (upgradeContainer && !upgradeContainer.children.length) {
+    console.log('Container is empty, reinitializing...');
+    initializePage();
+  }
+});
 
 // Clear the value of lastChest at midnight
 function clearLastChestAtMidnight() {
   const now = new Date();
-  const timeUntilMidnight =
-    new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0) -
-    now;
+  const midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0);
+  const timeUntilMidnight = midnight - now;
+  
   setTimeout(() => {
     localStorage.removeItem("lastChest");
+    clearLastChestAtMidnight(); // Set up for next midnight
   }, timeUntilMidnight);
 }
+
+// Start the midnight check
 clearLastChestAtMidnight();

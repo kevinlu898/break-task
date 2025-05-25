@@ -16,27 +16,60 @@
   </head>
   <style>
     .upgrade-container {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      display: flex;
+      flex-direction: column;
       gap: 1rem;
-      justify-items: center;
-      align-items: center;
+      padding: 20px;
+      width: 100%;
+      box-sizing: border-box;
     }
 
     .upgrade {
       margin: 0;
-      background: #eefbff;
+      background: #f6f6f6;
+      background: linear-gradient(10deg, #fcfcfc 2%, #eff4ff 74%, #e6eeff 100%);
       width: 100%;
       padding: 20px;
       border-radius: 15px;
       border: 1px solid #bde0f7;
       cursor: pointer;
+      color: #2c3e50;
+      font-weight: 400;
+      font-size: 1.5rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      display: block;
+      text-decoration: none;
     }
 
     .upgrade:hover {
-      transform: scale(1.05); /* Slightly enlarge the upgrade box */
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a shadow effect */
-      background: #d9f4ff; /* Change background color on hover */
+      transform: scale(1.02);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      background: linear-gradient(10deg, #fcfcfc 2%, #e8ffef 74%, #d4ffe6 100%);
+    }
+
+    .upgrade h2 {
+      margin: 0 0 10px 0;
+      font-size: 1.8rem;
+      color: #2c3e50;
+    }
+
+    .upgrade p {
+      margin: 0;
+      font-size: 1.2rem;
+      font-weight: 300;
+      color: #2c3e50;
+    }
+
+    #task_list {
+      padding: 20px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    #task_list h1 {
+      margin-bottom: 30px;
+      color: #2c3e50;
     }
   </style>
   <body>
@@ -86,20 +119,26 @@
         <div id="player_stats_title" class="button-text">
           <p>Player Stats</p>
         </div>
-        <div id="points-container" class="emblem-container flex-display">
-          <div id="points-container-emblem" class="svg-emblem">💰</div>
-          <p>Coins:</p>
+        <div id="coins-container" class="flex-container">
+          <div id="coins-container-emblem" class="svg-emblem">💰</div>
+          <p>Coins: </p>
+        </div>
+        <div id="points-container" class="flex-container">
+          <img id="break-container-emblem" class="svg-emblem" src="ass_ets/break_symbol.svg" alt="break"/>
+          <p>Break time: </p>
         </div>
       </div>
     </div>
     <!-- Main Content -->
     <div id="task_list" class="gray-bg">
-      <h1 style="text-align: center">Upgrades</h1>
-      <br /><br /><br />
-      <div class="upgrade-container" id="upgradecont"></div>
+      <h1>Upgrades</h1>
+      <div class="upgrade-container" id="upgradecont">
+        <!-- Upgrades will be inserted here by JavaScript -->
+      </div>
     </div>
 
-    <script src="script.js" async defer></script>
-    <script src="break.js" async defer></script>
+    <!-- Load scripts in the correct order -->
+    <script src="script.js"></script>
+    <script src="break.js"></script>
   </body>
 </html>

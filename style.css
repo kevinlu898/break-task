@@ -273,6 +273,7 @@ h1 {
     padding: 20px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     z-index: 900;
+    display: none;
 }
 
 .input-container {
@@ -307,6 +308,7 @@ h1 {
     height: 100%;
     background-color: rgba(0, 0, 0, 0.3);
     z-index: 700;
+    display: none;
 }
 
 .flex-display {

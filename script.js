@@ -16,24 +16,41 @@ id -> id for making new tasks
 */
 
 let activeTimer = null;
+let breakTimeTimer = null;
+
+// Add page detection at the start
+const isBreaksPage = window.location.pathname.includes('breaks.html');
 
 function formatTime(seconds) {
+    // Round to nearest second to avoid floating point issues
+    seconds = Math.round(seconds);
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
 }
 
-function updateTaskTimer(taskId, remainingTime) {
+function updateTaskTimer(taskId) {
     const taskElement = document.getElementById(`task-item-${taskId}`);
     if (!taskElement) return;
     
+    const tasks = JSON.parse(localStorage.getItem("tasks"));
+    const task = tasks.find(t => t.id == taskId);
+    if (!task || !task.running) return;
+
+    const now = Date.now();
+    const remainingTime = Math.max(0, (task.endTime - now) / 1000); // Convert to seconds
     const timeText = taskElement.querySelector('.time-text');
     timeText.textContent = `Time remaining: ${formatTime(remainingTime)}`;
+
+    // If task is complete, handle completion
+    if (remainingTime <= 0) {
+        completeTask(taskId);
+    }
 }
 
 function updateStats() {
-    const coins = localStorage.getItem("coins") || 0;
-    const breakTime = localStorage.getItem("breakTime") || 0;
+    const coins = Number(localStorage.getItem("coins") || 0);
+    const breakTime = Number(localStorage.getItem("breakTime") || 0);
     
     // Update coins display
     const coinsDisplay = document.querySelector('.flex-container p');
@@ -42,9 +59,14 @@ function updateStats() {
     }
     
     // Update break time display
-    const breakTimeDisplay = document.querySelector('.emblem-container p');
+    const breakTimeDisplay = document.querySelector('#points-container p');
     if (breakTimeDisplay) {
-        breakTimeDisplay.textContent = `Break time: ${breakTime} minutes`;
+        const minutes = Math.floor(Math.abs(breakTime));
+        const seconds = Math.floor((Math.abs(breakTime) - minutes) * 60);
+        const displayText = breakTime < 0 ? 
+            `Break time: -${minutes}:${seconds.toString().padStart(2, '0')} (${Math.abs(breakTime)} coins debt)` : 
+            `Break time: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+        breakTimeDisplay.textContent = displayText;
     }
 }
 
@@ -73,22 +95,31 @@ function completeTask(taskId) {
 }
 
 function resetDefault() {
-  localStorage.set("coins", 0);
-  localStorage.set("breakTime", 0);
-  localStorage.set("level", 0);
-  localStorage.set("xp", 0);
-  localStorage.set("name", "");
-  localStorage.set("tasks", []);
-  localStorage.set("id", 0);
+  localStorage.setItem("coins", 1000);
+  localStorage.setItem("breakTime", 0);
+  localStorage.setItem("level", 0);
+  localStorage.setItem("xp", 0);
+  localStorage.setItem("name", "");
+  localStorage.setItem("tasks", "[]");
+  localStorage.setItem("id", 0);
 }
 
 function render() {
   const thetasklist = document.getElementById("task_list");
   thetasklist.innerHTML = "";
   JSON.parse(localStorage.getItem("tasks")).forEach((element) => {
-    const isCompleted = element.running && element.time <= 0;
+    const isCompleted = element.running && element.endTime && Date.now() >= element.endTime;
     const taskClass = isCompleted ? 'task-item completed' : 
                      element.running ? 'task-item running' : 'task-item';
+    
+    // Calculate remaining time for display
+    let timeDisplay;
+    if (element.running && element.endTime) {
+      const remainingTime = Math.max(0, (element.endTime - Date.now()) / 1000);
+      timeDisplay = `Time remaining: ${formatTime(remainingTime)}`;
+    } else {
+      timeDisplay = `Time needed: ${element.time} minutes`;
+    }
     
     if (!element.locked) {
       thetasklist.innerHTML += `
@@ -97,9 +128,7 @@ function render() {
                         ${element.name}
                     </div>
                     <div class="task-widgets">
-                        <p class="time-text">${element.running ? 
-                            `Time remaining: ${formatTime(element.time * 60)}` : 
-                            `Time needed: ${element.time} minutes`}</p>
+                        <p class="time-text">${timeDisplay}</p>
                         <div class="task-buttons">
                             ${isCompleted ? 
                                 `<img class="svg-emblem" src="ass_ets/end_started_task_symbol.svg" alt="complete" onclick="completeTask(${element.id})"/>` :
@@ -117,9 +146,7 @@ function render() {
                         ${element.name}
                     </div>
                     <div class="task-widgets">
-                        <p class="time-text">${element.running ? 
-                            `Time remaining: ${formatTime(element.time * 60)}` : 
-                            `Time needed: ${element.time} minutes`}</p>
+                        <p class="time-text">${timeDisplay}</p>
                         <div class="task-buttons">
                             ${isCompleted ? 
                                 `<img class="svg-emblem" src="ass_ets/end_started_task_symbol.svg" alt="complete" onclick="completeTask(${element.id})"/>` :
@@ -140,7 +167,15 @@ function addTask(name, time) {
   const listrn = JSON.parse(localStorage.getItem("tasks"));
   localStorage.setItem(
     "tasks",
-    JSON.stringify([...listrn, { name: name, id: localStorage.getItem("id"), locked: false, time: time, running: false}])
+    JSON.stringify([...listrn, { 
+        name: name, 
+        id: localStorage.getItem("id"), 
+        locked: false, 
+        time: time, 
+        originalTime: time, // Store original time for coin calculation
+        running: false,
+        lastUpdate: Date.now()
+    }])
   );
   const curid = Number(localStorage.getItem("id"));
   localStorage.setItem("id", curid + 1);
@@ -186,85 +221,187 @@ function closeAddTaskPopup() {
   overlay.style.display = "none";
 }
 
+function startBreakTimeTimer() {
+    if (breakTimeTimer) return; // Don't start if already running
+    
+    breakTimeTimer = setInterval(() => {
+        const breakTime = Number(localStorage.getItem("breakTime") || 0);
+        const coins = Number(localStorage.getItem("coins") || 0);
+        
+        // Decrease break time by 1/60th of a minute (1 second)
+        const newBreakTime = breakTime - (1/60);
+        localStorage.setItem("breakTime", newBreakTime);
+        
+        // If break time goes negative, deduct coins every minute
+        if (newBreakTime < 0 && coins > 0 && Math.floor(newBreakTime) !== Math.floor(breakTime)) {
+            localStorage.setItem("coins", coins - 1);
+        }
+        
+        updateStats();
+    }, 1000); // Run every second
+}
+
+function stopBreakTimeTimer() {
+    if (breakTimeTimer) {
+        clearInterval(breakTimeTimer);
+        breakTimeTimer = null;
+    }
+}
+
 function startTask(theid) {
-  const tasks = JSON.parse(localStorage.getItem("tasks"));
-  const task = tasks.find(t => t.id == theid);
-  
-  if (!task) return;
-  
-  // If task is locked, redirect (placeholder for now)
-  if (task.locked) {
-      // TODO: Add redirect logic
-      return;
-  }
-  
-  // Clear any existing timer
-  if (activeTimer) {
-      clearInterval(activeTimer);
-      activeTimer = null;
-  }
-  
-  // Update tasks: toggle the clicked task and stop any other running tasks
-  tasks.forEach(t => {
-      if (t.id == theid) {
-          t.running = !t.running;
-          if (t.running) {
-              // Start timer
-              let remainingTime = t.time * 60; // Convert minutes to seconds
-              activeTimer = setInterval(() => {
-                  remainingTime--;
-                  updateTaskTimer(theid, remainingTime);
-                  
-                  if (remainingTime <= 0) {
-                      clearInterval(activeTimer);
-                      activeTimer = null;
-                      completeTask(theid);
-                  }
-              }, 1000);
-          }
-      } else if (t.running) {
-          t.running = false;
-      }
-  });
-  
-  localStorage.setItem("tasks", JSON.stringify(tasks));
-  render();
+    const tasks = JSON.parse(localStorage.getItem("tasks"));
+    const task = tasks.find(t => t.id == theid);
+    
+    if (!task) return;
+    
+    // If task is locked, redirect to locked.html
+    if (task.locked) {
+        window.location.href = `locked.html?name=${encodeURIComponent(task.name)}&time=${task.time}`;
+        return;
+    }
+    
+    // Clear any existing timer
+    if (activeTimer) {
+        clearInterval(activeTimer);
+        activeTimer = null;
+    }
+    
+    // Stop break time timer when starting a task
+    stopBreakTimeTimer();
+    
+    // Update tasks: toggle the clicked task and stop any other running tasks
+    tasks.forEach(t => {
+        if (t.id == theid) {
+            t.running = !t.running;
+            if (t.running) {
+                // Store start and end times
+                const now = Date.now();
+                t.startTime = now;
+                t.endTime = now + (t.time * 60 * 1000); // Convert minutes to milliseconds
+                
+                // Start timer
+                activeTimer = setInterval(() => {
+                    updateTaskTimer(theid);
+                }, 1000);
+            } else {
+                // Start break time timer when task is stopped
+                startBreakTimeTimer();
+            }
+        } else if (t.running) {
+            t.running = false;
+        }
+    });
+    
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+    render();
+}
+
+// Add this function to check task states
+function checkTaskStates() {
+    const tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
+    let tasksUpdated = false;
+    
+    tasks.forEach(task => {
+        if (task.running && task.endTime) {
+            const now = Date.now();
+            const remainingTime = Math.max(0, (task.endTime - now) / 1000); // Convert to seconds
+            
+            // If task is complete, grant coins
+            if (remainingTime <= 0) {
+                const coins = Number(localStorage.getItem("coins") || 0);
+                const minutes = Math.ceil(task.originalTime / 60);
+                localStorage.setItem("coins", coins + minutes);
+                task.running = false;
+                tasksUpdated = true;
+            }
+        }
+    });
+    
+    if (tasksUpdated) {
+        localStorage.setItem("tasks", JSON.stringify(tasks));
+        render();
+    }
 }
 
 window.onload = () => {
-  localStorage.setItem("tasks", "[]");
-  localStorage.setItem("id", 0);
+  // Only initialize if not already set
+  if (!localStorage.getItem("tasks")) {
+    localStorage.setItem("tasks", "[]");
+  }
+  if (!localStorage.getItem("id")) {
+    localStorage.setItem("id", 0);
+  }
   
-  // Add event listener for the Create Task button
-  const createTaskButton = document.getElementById("create_task_button");
-  createTaskButton.addEventListener("click", openAddTaskPopup);
+  // Check task states when loading the page
+  checkTaskStates();
   
-  // Add event listener for the add task button
-  const addTaskButton = document.getElementById("add_task_popup_button");
-  addTaskButton.addEventListener("click", () => {
-    const nameInput = document.querySelector("#add_task_input[type='text']");
-    const timeInput = document.querySelector("#add_task_input[type='number']");
-    
-    if (nameInput && timeInput) {
-      addTask(nameInput.value, parseInt(timeInput.value));
-      // Clear inputs after adding
-      nameInput.value = "";
-      timeInput.value = "";
+  // Get current tasks
+  const tasks = JSON.parse(localStorage.getItem("tasks"));
+  
+  // Clear any existing timers
+  if (activeTimer) {
+    clearInterval(activeTimer);
+    activeTimer = null;
+  }
+  if (breakTimeTimer) {
+    clearInterval(breakTimeTimer);
+    breakTimeTimer = null;
+  }
+  
+  // Start appropriate timer based on task state
+  if (!tasks.some(task => task.running)) {
+    startBreakTimeTimer();
+  } else {
+    // Restart timer for any running tasks
+    tasks.forEach(task => {
+      if (task.running && task.endTime) {
+        activeTimer = setInterval(() => {
+          updateTaskTimer(task.id);
+        }, 1000);
+      }
+    });
+  }
+  
+  // Only initialize task-related elements if we're on the main page
+  if (!isBreaksPage) {
+    // Add event listener for the Create Task button
+    const createTaskButton = document.getElementById("create_task_button");
+    if (createTaskButton) {
+      createTaskButton.addEventListener("click", openAddTaskPopup);
     }
-  });
+    
+    // Add event listener for the add task button
+    const addTaskButton = document.getElementById("add_task_popup_button");
+    if (addTaskButton) {
+      addTaskButton.addEventListener("click", () => {
+        const nameInput = document.querySelector("#add_task_input[type='text']");
+        const timeInput = document.querySelector("#add_task_input[type='number']");
+        
+        if (nameInput && timeInput) {
+          addTask(nameInput.value, parseInt(timeInput.value));
+          // Clear inputs after adding
+          nameInput.value = "";
+          timeInput.value = "";
+        }
+      });
+    }
 
-  // Add event listener for the close button
-  const closeButton = document.querySelector("#add_task_popup_close_button img");
-  if (closeButton) {
-    closeButton.addEventListener("click", closeAddTaskPopup);
+    // Add event listener for the close button
+    const closeButton = document.querySelector("#add_task_popup_close_button img");
+    if (closeButton) {
+      closeButton.addEventListener("click", closeAddTaskPopup);
+    }
+
+    // Add event listener for the X in the corner
+    const cornerCloseButton = document.querySelector("#add_task_popup_cancel_button");
+    if (cornerCloseButton) {
+      cornerCloseButton.addEventListener("click", closeAddTaskPopup);
+    }
+
+    // Initial render of tasks
+    render();
   }
 
-  // Add event listener for the X in the corner
-  const cornerCloseButton = document.querySelector("#add_task_popup_cancel_button");
-  if (cornerCloseButton) {
-    cornerCloseButton.addEventListener("click", closeAddTaskPopup);
-  }
-
-  // Initial stats update
+  // Initial stats update (needed on both pages)
   updateStats();
 };
