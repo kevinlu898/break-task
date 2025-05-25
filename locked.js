@@ -68,11 +68,11 @@ function completeTask() {
     const updatedTasks = tasks.filter(t => t.name !== taskName);
     localStorage.setItem("tasks", JSON.stringify(updatedTasks));
     
-    // Show success message
-    alert(`Task completed! You earned ${points} coins!`);
-    
-    // Return to main page
-    window.location.href = 'index.html';
+    // Flash green and redirect
+    document.body.classList.add('success');
+    setTimeout(() => {
+        window.location.href = 'index.html';
+    }, 500); // Redirect after 500ms (half a second)
 }
 
 function addEventListeners() {

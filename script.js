@@ -166,12 +166,14 @@ function render() {
 function addTask(name, time) {
   if (!name || !time) return; // Don't add if name or time is missing
   
-  const listrn = JSON.parse(localStorage.getItem("tasks"));
+  const listrn = JSON.parse(localStorage.getItem("tasks") || "[]");
+  const curid = Number(localStorage.getItem("id") || 0);
+  
   localStorage.setItem(
     "tasks",
     JSON.stringify([...listrn, { 
         name: name, 
-        id: localStorage.getItem("id"), 
+        id: curid, 
         locked: false, 
         time: time, 
         originalTime: time, // Store original time for coin calculation
@@ -179,7 +181,7 @@ function addTask(name, time) {
         lastUpdate: Date.now()
     }])
   );
-  const curid = Number(localStorage.getItem("id"));
+  
   localStorage.setItem("id", curid + 1);
   render();
   closeAddTaskPopup(); // Close the popup after adding
@@ -235,8 +237,16 @@ function startBreakTimeTimer() {
         localStorage.setItem("breakTime", newBreakTime);
         
         // If break time goes negative, deduct coins every minute
-        if (newBreakTime < 0 && coins > 0 && Math.floor(newBreakTime) !== Math.floor(breakTime)) {
-            localStorage.setItem("coins", coins - 1);
+        if (newBreakTime < 0) {
+            // Calculate how many coins to deduct (1 coin per minute of debt)
+            const debtAmount = Math.abs(Math.floor(newBreakTime));
+            if (coins > 0) {
+                // Deduct all available coins up to the debt amount
+                const deduction = Math.min(coins, debtAmount);
+                localStorage.setItem("coins", coins - deduction);
+                // Reduce the debt by the amount deducted
+                localStorage.setItem("breakTime", newBreakTime + (deduction / 60));
+            }
         }
         
         updateStats();
