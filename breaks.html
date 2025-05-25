@@ -7,7 +7,7 @@
     <meta name="description" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="style.css" />
-    <link rel="icon" type="image/x-icon" href="/ass_ets/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="/ass_ets/favicon.ico" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -17,8 +17,8 @@
   </head>
   <style>
     .upgrade-container {
-      display: flex;
-      flex-direction: column;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
       gap: 1rem;
       padding: 20px;
       width: 100%;
@@ -29,7 +29,7 @@
       margin: 0;
       background: #f6f6f6;
       background: linear-gradient(10deg, #fcfcfc 2%, #eff4ff 74%, #e6eeff 100%);
-      width: 100%;
+      width: 90%;
       padding: 20px;
       border-radius: 15px;
       border: 1px solid #bde0f7;
@@ -76,35 +76,19 @@
   <body>
     <!-- Left Dashboard/Nav-->
     <div id="left_dashboard" class="dashboard blue-gradient-bg">
-      <h1>BreakTask</h1>
+      <img
+        width="400px"
+        style="display: block; margin: 0 auto"
+        src="/ass_ets/logo.png"
+      />
       <div id="action_sidebar">
-        <div id="create_task_button" class="button full-width">
+        <div
+          id="tasks_button"
+          onclick="window.location.href='index.html'"
+          class="button full-width"
+        >
           <div class="button-content">
-            <div id="create_task_button_emblem" class="emblem">+</div>
-            <div id="create_task_button_emblem_text" class="button-text">
-              <p>Create Task</p>
-            </div>
-          </div>
-        </div>
-        <div id="lock_schedule_button" class="button full-width">
-          <div class="button-content">
-            <div
-              id="lock_schedule_button_emblem"
-              class="emblem-container-no-fullwidth"
-            >
-              <img src="ass_ets/lock.svg" alt="lock" class="svg-emblem" />
-            </div>
-            <div id="lock_schedule_button_emblem_text" class="button-text">
-              <p>Lock Schedule</p>
-            </div>
-          </div>
-        </div>
-        <div id="tasks_button" onclick="window.location.href='index.html'" class="button full-width">
-          <div class="button-content">
-            <div
-              id="tasks_button_emblem"
-              class="emblem-container-no-fullwidth" 
-            >
+            <div id="tasks_button_emblem" class="emblem-container-no-fullwidth">
               <img src="ass_ets/task.svg" alt="lock" class="svg-emblem" />
             </div>
             <div id="tasks_button_emblem_text" class="button-text">
@@ -122,17 +106,23 @@
         </div>
         <div id="coins-container" class="flex-container">
           <div id="coins-container-emblem" class="svg-emblem">💰</div>
-          <p>Coins: </p>
+          <p>Coins:</p>
         </div>
         <div id="points-container" class="flex-container">
-          <img id="break-container-emblem" class="svg-emblem" src="ass_ets/break_symbol.svg" alt="break"/>
-          <p>Break time: </p>
+          <img
+            id="break-container-emblem"
+            class="svg-emblem"
+            src="ass_ets/break_symbol.svg"
+            alt="break"
+          />
+          <p>Break time:</p>
         </div>
       </div>
     </div>
     <!-- Main Content -->
     <div id="task_list" class="gray-bg">
-      <h1>Upgrades</h1>
+      <h1 style="text-align: center">Breaks</h1>
+      <p style="text-align: center">Buy break to to relax!</p>
       <div class="upgrade-container" id="upgradecont">
         <!-- Upgrades will be inserted here by JavaScript -->
       </div>
