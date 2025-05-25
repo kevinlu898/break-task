@@ -1,14 +1,9 @@
-function timeToCoin(minutes) {
-  return Math.pow(1.01, minutes) * 2;
-}
+/*
+Database you seek?
+Only empty dreams remain
+Local storage rules
+*/
 
-function timetoXP(minutes) {
-  return Math.pow(1.02, minutes) * 10;
-}
-
-function XPtoLevelUp(level) {
-  return Math.pow(2, level) * 100;
-}
 
 /*
 localstorage:
@@ -35,41 +30,50 @@ function render() {
   JSON.parse(localStorage.getItem("tasks")).forEach((element) => {
     if (!element.locked) {
     thetasklist.innerHTML += `
-                <div class="task-item">
-                    ${element.name}
-                    <div class="emblem-container justify-right">
-                      <div class="emblem-container-inner">
-                        <p class="time-text">Time needed: ${element.time} minutes</p>
-                        <img class="svg-emblem" src="ass_ets/start_arrow.svg" alt="start"/>
-                        <img class="svg-emblem" src="ass_ets/unlock.svg" alt="unlock" onclick="lockTask(${element.id})"/>
-                        <img class="svg-emblem" src="ass_ets/close-x.svg" alt="Remove" onclick="removeTask(${element.id})"/>
+                <div class="task-item ${element.running ? 'running' : ''}" id="task-item-${element.id}">
+                    <div class="task-content">
+                        ${element.name}
                     </div>
-                </div> `;
+                    <div class="task-widgets">
+                        <p class="time-text">Time needed: ${element.time} minutes</p>
+                        <div class="task-buttons">
+                            <img class="svg-emblem" src="ass_ets/${element.running ? 'stop' : 'start_arrow'}.svg" alt="${element.running ? 'stop' : 'start'}" onclick="startTask(${element.id})"/>
+                            <img class="svg-emblem" src="ass_ets/unlock.svg" alt="unlock" onclick="lockTask(${element.id})"/>
+                            <img class="svg-emblem" src="ass_ets/close-x.svg" alt="Remove" onclick="removeTask(${element.id})"/>
+                        </div>
+                    </div>
+                </div>`;
     } else {
       thetasklist.innerHTML += `
-                <div class="task-item">
-                    ${element.name}
-                    <div class="emblem-container justify-right">
-                      <div class="emblem-container-inner">
-                        <p class="time-text">Time needed: ${element.time} minutes</p>
-                        <img class="svg-emblem" src="ass_ets/start_arrow.svg" alt="start"/>
-                        <img class="svg-emblem" src="ass_ets/lock.svg" alt="lock" onclick="lockTask(${element.id})"/>
-                        <img class="svg-emblem" src="ass_ets/close-x.svg" alt="Remove" onclick="removeTask(${element.id})"/>
+                <div class="task-item ${element.running ? 'running' : ''}" id="task-item-${element.id}">
+                    <div class="task-content">
+                        ${element.name}
                     </div>
-                </div> `;
+                    <div class="task-widgets">
+                        <p class="time-text">Time needed: ${element.time} minutes</p>
+                        <div class="task-buttons">
+                            <img class="svg-emblem" src="ass_ets/${element.running ? 'stop' : 'start_arrow'}.svg" alt="${element.running ? 'stop' : 'start'}" onclick="startTask(${element.id})"/>
+                            <img class="svg-emblem" src="ass_ets/lock.svg" alt="lock" onclick="lockTask(${element.id})"/>
+                            <img class="svg-emblem" src="ass_ets/close-x.svg" alt="Remove" onclick="removeTask(${element.id})"/>
+                        </div>
+                    </div>
+                </div>`;
     }
   });
 }
 
-function addTask(name) {
+function addTask(name, time) {
+  if (!name || !time) return; // Don't add if name or time is missing
+  
   const listrn = JSON.parse(localStorage.getItem("tasks"));
   localStorage.setItem(
     "tasks",
-    JSON.stringify([...listrn, { name: name, id: localStorage.getItem`id`, locked: false, time: 0}])
+    JSON.stringify([...listrn, { name: name, id: localStorage.getItem("id"), locked: false, time: time, running: false}])
   );
   const curid = Number(localStorage.getItem("id"));
   localStorage.setItem("id", curid + 1);
   render();
+  closeAddTaskPopup(); // Close the popup after adding
 }
 
 function removeTask(theid) {
@@ -96,7 +100,70 @@ function lockTask(theid) {
   render();
 }
 
+function openAddTaskPopup() {
+  const addTaskPopup = document.getElementById("add_task_popup");
+  const overlay = document.getElementById("add_task_popup_overlay");
+  addTaskPopup.style.display = "block";
+  overlay.style.display = "block";
+}
+
+function closeAddTaskPopup() {
+  const addTaskPopup = document.getElementById("add_task_popup");
+  const overlay = document.getElementById("add_task_popup_overlay");
+  addTaskPopup.style.display = "none";
+  overlay.style.display = "none";
+}
+
+function startTask(theid) {
+  const tasks = JSON.parse(localStorage.getItem("tasks"));
+  
+  // Update tasks: toggle the clicked task and stop any other running tasks
+  tasks.forEach(task => {
+    if (task.id == theid) {
+      task.running = !task.running;
+    } else if (task.running) {
+      task.running = false;
+    }
+  });
+  
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+  render();
+}
+
 window.onload = () => {
   localStorage.setItem("tasks", "[]");
   localStorage.setItem("id", 0);
+  
+  // Add event listener for the Create Task button
+  const createTaskButton = document.getElementById("create_task_button");
+  createTaskButton.addEventListener("click", openAddTaskPopup);
+  
+  // Add event listener for the add task button
+  const addTaskButton = document.getElementById("add_task_popup_button");
+  addTaskButton.addEventListener("click", () => {
+    const nameInput = document.querySelector("#add_task_input[type='text']");
+    const timeInput = document.querySelector("#add_task_input[type='number']");
+    
+    if (nameInput && timeInput) {
+      addTask(nameInput.value, parseInt(timeInput.value));
+      // Clear inputs after adding
+      nameInput.value = "";
+      timeInput.value = "";
+    }
+  });
+
+  // Add event listener for the close button
+  const closeButton = document.querySelector("#add_task_popup_close_button img");
+  if (closeButton) {
+    closeButton.addEventListener("click", closeAddTaskPopup);
+  }
+
+  // Add event listener for the X in the corner
+  const cornerCloseButton = document.querySelector("#add_task_popup_cancel_button");
+  if (cornerCloseButton) {
+    cornerCloseButton.addEventListener("click", closeAddTaskPopup);
+  }
+
+  addTask("💀", 10);
+  addTask("hi", 10);
 };

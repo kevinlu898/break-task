@@ -147,9 +147,40 @@ h1 {
     font-size: 2rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 10px;
+    gap: 20px;
     margin-bottom: 8px;
+    transition: background 0.3s ease;
+}
+
+.task-item.running {
+    background: #f6f6f6;
+    background: linear-gradient(10deg, #fcfcfc 2%, #e8ffef 74%, #d4ffe6 100%);
+}
+
+.task-content {
+    flex: 1;
+}
+
+.task-widgets {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+}
+
+.task-buttons {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.time-text {
+    font-size: 1.2rem;
+    font-weight: 300;
+    color: #2c3e50;
+    margin: 0;
 }
 
 .task-item > img {
@@ -201,14 +232,6 @@ h1 {
 
 .emblem-container .svg-emblem:active {
     filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(190deg) brightness(40%) contrast(119%);
-}
-
-.time-text {
-    font-size: 1.5rem;
-    font-weight: 300;
-    color: #2c3e50;
-    margin-top: 5px;
-    margin-bottom: 5px;
 }
 
 @keyframes slideOutRight {
@@ -289,4 +312,31 @@ h1 {
     margin: 0;
     font-size: 1.2rem;
     color: #2c3e50;
+}
+
+#add_task_popup_button {
+    background-color: #ffffff;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #2c3e50;
+    width: auto;
+    box-sizing: border-box;
+    margin-left: auto;
+    display: inline-block;
+    padding: 10px 20px;
+}
+
+.task-buttons .svg-emblem {
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.task-buttons .svg-emblem:hover {
+    transform: scale(1.1);
+    filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(190deg) brightness(70%) contrast(119%);
+}
+
+.task-buttons .svg-emblem:active {
+    transform: scale(0.95);
+    filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(190deg) brightness(40%) contrast(119%);
 }
