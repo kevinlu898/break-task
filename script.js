@@ -15,8 +15,66 @@ tasks -> the list of tasks that have been created.
 id -> id for making new tasks
 */
 
+let activeTimer = null;
+
+function formatTime(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+}
+
+function updateTaskTimer(taskId, remainingTime) {
+    const taskElement = document.getElementById(`task-item-${taskId}`);
+    if (!taskElement) return;
+    
+    const timeText = taskElement.querySelector('.time-text');
+    timeText.textContent = `Time remaining: ${formatTime(remainingTime)}`;
+}
+
+function updateStats() {
+    const coins = localStorage.getItem("coins") || 0;
+    const breakTime = localStorage.getItem("breakTime") || 0;
+    
+    // Update coins display
+    const coinsDisplay = document.querySelector('.flex-container p');
+    if (coinsDisplay) {
+        coinsDisplay.textContent = `${coins} coins`;
+    }
+    
+    // Update break time display
+    const breakTimeDisplay = document.querySelector('.emblem-container p');
+    if (breakTimeDisplay) {
+        breakTimeDisplay.textContent = `Break time: ${breakTime} minutes`;
+    }
+}
+
+function completeTask(taskId) {
+    const tasks = JSON.parse(localStorage.getItem("tasks"));
+    const task = tasks.find(t => t.id == taskId);
+    if (!task) return;
+
+    // Grant coins (1 coin per minute)
+    const coins = Number(localStorage.getItem("coins") || 0);
+    const minutes = Math.ceil(task.time / 60);
+    localStorage.setItem("coins", coins + minutes);
+
+    // Remove the task
+    const updatedTasks = tasks.filter(t => t.id != taskId);
+    localStorage.setItem("tasks", JSON.stringify(updatedTasks));
+    
+    // Clear timer
+    if (activeTimer) {
+        clearInterval(activeTimer);
+        activeTimer = null;
+    }
+    
+    render();
+    updateStats(); // Update stats after completing task
+}
+
 function resetDefault() {
   localStorage.set("coins", 0);
+  localStorage.set("breakTime", 0);
   localStorage.set("level", 0);
   localStorage.set("xp", 0);
   localStorage.set("name", "");
@@ -28,16 +86,25 @@ function render() {
   const thetasklist = document.getElementById("task_list");
   thetasklist.innerHTML = "";
   JSON.parse(localStorage.getItem("tasks")).forEach((element) => {
+    const isCompleted = element.running && element.time <= 0;
+    const taskClass = isCompleted ? 'task-item completed' : 
+                     element.running ? 'task-item running' : 'task-item';
+    
     if (!element.locked) {
-    thetasklist.innerHTML += `
-                <div class="task-item ${element.running ? 'running' : ''}" id="task-item-${element.id}">
+      thetasklist.innerHTML += `
+                <div class="${taskClass}" id="task-item-${element.id}">
                     <div class="task-content">
                         ${element.name}
                     </div>
                     <div class="task-widgets">
-                        <p class="time-text">Time needed: ${element.time} minutes</p>
+                        <p class="time-text">${element.running ? 
+                            `Time remaining: ${formatTime(element.time * 60)}` : 
+                            `Time needed: ${element.time} minutes`}</p>
                         <div class="task-buttons">
-                            <img class="svg-emblem" src="ass_ets/${element.running ? 'stop' : 'start_arrow'}.svg" alt="${element.running ? 'stop' : 'start'}" onclick="startTask(${element.id})"/>
+                            ${isCompleted ? 
+                                `<img class="svg-emblem" src="ass_ets/end_started_task_symbol.svg" alt="complete" onclick="completeTask(${element.id})"/>` :
+                                `<img class="svg-emblem" src="ass_ets/${element.running ? 'stop' : 'start_arrow'}.svg" alt="${element.running ? 'stop' : 'start'}" onclick="startTask(${element.id})"/>`
+                            }
                             <img class="svg-emblem" src="ass_ets/unlock.svg" alt="unlock" onclick="lockTask(${element.id})"/>
                             <img class="svg-emblem" src="ass_ets/close-x.svg" alt="Remove" onclick="removeTask(${element.id})"/>
                         </div>
@@ -45,14 +112,19 @@ function render() {
                 </div>`;
     } else {
       thetasklist.innerHTML += `
-                <div class="task-item ${element.running ? 'running' : ''}" id="task-item-${element.id}">
+                <div class="${taskClass}" id="task-item-${element.id}">
                     <div class="task-content">
                         ${element.name}
                     </div>
                     <div class="task-widgets">
-                        <p class="time-text">Time needed: ${element.time} minutes</p>
+                        <p class="time-text">${element.running ? 
+                            `Time remaining: ${formatTime(element.time * 60)}` : 
+                            `Time needed: ${element.time} minutes`}</p>
                         <div class="task-buttons">
-                            <img class="svg-emblem" src="ass_ets/${element.running ? 'stop' : 'start_arrow'}.svg" alt="${element.running ? 'stop' : 'start'}" onclick="startTask(${element.id})"/>
+                            ${isCompleted ? 
+                                `<img class="svg-emblem" src="ass_ets/end_started_task_symbol.svg" alt="complete" onclick="completeTask(${element.id})"/>` :
+                                `<img class="svg-emblem" src="ass_ets/${element.running ? 'stop' : 'start_arrow'}.svg" alt="${element.running ? 'stop' : 'start'}" onclick="startTask(${element.id})"/>`
+                            }
                             <img class="svg-emblem" src="ass_ets/lock.svg" alt="lock" onclick="lockTask(${element.id})"/>
                             <img class="svg-emblem" src="ass_ets/close-x.svg" alt="Remove" onclick="removeTask(${element.id})"/>
                         </div>
@@ -116,14 +188,43 @@ function closeAddTaskPopup() {
 
 function startTask(theid) {
   const tasks = JSON.parse(localStorage.getItem("tasks"));
+  const task = tasks.find(t => t.id == theid);
+  
+  if (!task) return;
+  
+  // If task is locked, redirect (placeholder for now)
+  if (task.locked) {
+      // TODO: Add redirect logic
+      return;
+  }
+  
+  // Clear any existing timer
+  if (activeTimer) {
+      clearInterval(activeTimer);
+      activeTimer = null;
+  }
   
   // Update tasks: toggle the clicked task and stop any other running tasks
-  tasks.forEach(task => {
-    if (task.id == theid) {
-      task.running = !task.running;
-    } else if (task.running) {
-      task.running = false;
-    }
+  tasks.forEach(t => {
+      if (t.id == theid) {
+          t.running = !t.running;
+          if (t.running) {
+              // Start timer
+              let remainingTime = t.time * 60; // Convert minutes to seconds
+              activeTimer = setInterval(() => {
+                  remainingTime--;
+                  updateTaskTimer(theid, remainingTime);
+                  
+                  if (remainingTime <= 0) {
+                      clearInterval(activeTimer);
+                      activeTimer = null;
+                      completeTask(theid);
+                  }
+              }, 1000);
+          }
+      } else if (t.running) {
+          t.running = false;
+      }
   });
   
   localStorage.setItem("tasks", JSON.stringify(tasks));
@@ -166,4 +267,7 @@ window.onload = () => {
 
   addTask("💀", 10);
   addTask("hi", 10);
+  
+  // Initial stats update
+  updateStats();
 };

@@ -159,6 +159,17 @@ h1 {
     background: linear-gradient(10deg, #fcfcfc 2%, #e8ffef 74%, #d4ffe6 100%);
 }
 
+.task-item.completed {
+    background: #f6f6f6;
+    background: linear-gradient(10deg, #fcfcfc 2%, #e8ffef 74%, #d4ffe6 100%);
+    border: 2px solid #4CAF50;
+}
+
+.task-item.completed .time-text {
+    color: #4CAF50;
+    font-weight: 500;
+}
+
 .task-content {
     flex: 1;
 }
