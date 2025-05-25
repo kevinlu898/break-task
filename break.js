@@ -6,13 +6,11 @@ const upgrades = [
     cost: 5,
     id: 0,
     effect: () => {
-      const coins = Number(localStorage.getItem("coins") || 0);
+      const coins = Math.round(Number(localStorage.getItem("coins") || 0));
       if (coins - 5 >= 0) {
         localStorage.setItem("coins", coins - 5);
-        localStorage.setItem(
-          "breakTime",
-          Number(localStorage.getItem("breakTime") || 0) + 10
-        );
+        const currentBreakTime = Number(localStorage.getItem("breakTime") || 0);
+        localStorage.setItem("breakTime", Math.round((currentBreakTime + 10) * 60) / 60);
         updateStats();
         alert("Purchased!");
       } else {
@@ -26,13 +24,11 @@ const upgrades = [
     cost: 15,
     id: 1,
     effect: () => {
-      const coins = Number(localStorage.getItem("coins") || 0);
+      const coins = Math.round(Number(localStorage.getItem("coins") || 0));
       if (coins - 15 >= 0) {
         localStorage.setItem("coins", coins - 15);
-        localStorage.setItem(
-          "breakTime",
-          Number(localStorage.getItem("breakTime") || 0) + 30
-        );
+        const currentBreakTime = Number(localStorage.getItem("breakTime") || 0);
+        localStorage.setItem("breakTime", Math.round((currentBreakTime + 30) * 60) / 60);
         updateStats();
         alert("Purchased!");
       } else {
@@ -146,8 +142,8 @@ const chests = [
     name: "Coins Boost",
     description: "Coins increase by 1.3x",
     effect: () => {
-      const coins = Number(localStorage.getItem("coins") || 0);
-      localStorage.setItem("coins", Math.floor(coins * 1.3));
+      const coins = Math.round(Number(localStorage.getItem("coins") || 0));
+      localStorage.setItem("coins", Math.round(coins * 1.3));
       updateStats();
     },
   },
@@ -155,8 +151,8 @@ const chests = [
     name: "Coins Boost",
     description: "Coins increase by 1.5x",
     effect: () => {
-      const coins = Number(localStorage.getItem("coins") || 0);
-      localStorage.setItem("coins", Math.floor(coins * 1.5));
+      const coins = Math.round(Number(localStorage.getItem("coins") || 0));
+      localStorage.setItem("coins", Math.round(coins * 1.5));
       updateStats();
     },
   },
@@ -191,14 +187,14 @@ function doStuff(id) {
 
 // Add updateStats function to match script.js
 function updateStats() {
-    const coins = Number(localStorage.getItem("coins") || 0);
+    const coins = Math.round(Number(localStorage.getItem("coins") || 0));
     const breakTime = Number(localStorage.getItem("breakTime") || 0);
     
     // Update coins display - handle both pages
     const coinsDisplays = document.querySelectorAll('.flex-container p');
     coinsDisplays.forEach(display => {
         if (display && display.textContent.includes('Coins:')) {
-            display.textContent = `Coins: ${Math.round(coins)}`;
+            display.textContent = `Coins: ${coins}`;
         }
     });
     
@@ -226,10 +222,10 @@ function startBreakTimeTimer() {
     
     breakTimeTimerBreak = setInterval(() => {
         const breakTime = Number(localStorage.getItem("breakTime") || 0);
-        const coins = Number(localStorage.getItem("coins") || 0);
+        const coins = Math.round(Number(localStorage.getItem("coins") || 0));
         
         // Decrease break time by 1/60th of a minute (1 second)
-        const newBreakTime = breakTime - (1/60);
+        const newBreakTime = Math.round((breakTime - (1/60)) * 60) / 60; // Round to nearest second
         localStorage.setItem("breakTime", newBreakTime);
         
         // If break time goes negative, deduct coins every minute

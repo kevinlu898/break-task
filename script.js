@@ -49,7 +49,7 @@ function updateTaskTimer(taskId) {
 }
 
 function updateStats() {
-    const coins = Number(localStorage.getItem("coins") || 0);
+    const coins = Math.round(Number(localStorage.getItem("coins") || 0));
     const breakTime = Number(localStorage.getItem("breakTime") || 0);
     
     // Update coins display
@@ -61,10 +61,12 @@ function updateStats() {
     // Update break time display
     const breakTimeDisplay = document.querySelector('#points-container p');
     if (breakTimeDisplay) {
-        const minutes = Math.floor(Math.abs(breakTime));
-        const seconds = Math.floor((Math.abs(breakTime) - minutes) * 60);
-        const displayText = breakTime < 0 ? 
-            `Break time: -${minutes}:${seconds.toString().padStart(2, '0')} (${Math.abs(breakTime)} coins debt)` : 
+        // Round to avoid floating point issues
+        const roundedBreakTime = Math.round(breakTime * 60) / 60; // Round to nearest second
+        const minutes = Math.floor(Math.abs(roundedBreakTime));
+        const seconds = Math.floor((Math.abs(roundedBreakTime) - minutes) * 60);
+        const displayText = roundedBreakTime < 0 ? 
+            `Break time: -${minutes}:${seconds.toString().padStart(2, '0')} (${Math.abs(Math.round(roundedBreakTime))} coins debt)` : 
             `Break time: ${minutes}:${seconds.toString().padStart(2, '0')}`;
         breakTimeDisplay.textContent = displayText;
     }
@@ -76,7 +78,7 @@ function completeTask(taskId) {
     if (!task) return;
 
     // Grant coins (1 coin per minute)
-    const coins = Number(localStorage.getItem("coins") || 0);
+    const coins = Math.round(Number(localStorage.getItem("coins") || 0));
     const minutes = Math.ceil(task.time / 60);
     localStorage.setItem("coins", coins + minutes);
 
@@ -226,10 +228,10 @@ function startBreakTimeTimer() {
     
     breakTimeTimer = setInterval(() => {
         const breakTime = Number(localStorage.getItem("breakTime") || 0);
-        const coins = Number(localStorage.getItem("coins") || 0);
+        const coins = Math.round(Number(localStorage.getItem("coins") || 0));
         
         // Decrease break time by 1/60th of a minute (1 second)
-        const newBreakTime = breakTime - (1/60);
+        const newBreakTime = Math.round((breakTime - (1/60)) * 60) / 60; // Round to nearest second
         localStorage.setItem("breakTime", newBreakTime);
         
         // If break time goes negative, deduct coins every minute
@@ -308,7 +310,7 @@ function checkTaskStates() {
             
             // If task is complete, grant coins
             if (remainingTime <= 0) {
-                const coins = Number(localStorage.getItem("coins") || 0);
+                const coins = Math.round(Number(localStorage.getItem("coins") || 0));
                 const minutes = Math.ceil(task.originalTime / 60);
                 localStorage.setItem("coins", coins + minutes);
                 task.running = false;

@@ -56,10 +56,11 @@ function completeTask() {
     removeEventListeners();
     
     // Calculate points (1.5 points per minute)
+    // Round to avoid floating point errors
     const points = Math.round(taskTime * 1.5);
     
-    // Update coins
-    const currentCoins = Number(localStorage.getItem('coins') || 0);
+    // Update coins - ensure we're working with integers
+    const currentCoins = Math.round(Number(localStorage.getItem('coins') || 0));
     localStorage.setItem('coins', currentCoins + points);
     
     // Remove the task from localStorage
