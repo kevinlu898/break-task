@@ -92,6 +92,15 @@ h1 {
     margin: 15px;
     padding: 15px;
     border-radius: 15px;
+    box-sizing: border-box;
+    align-items: center;
+    gap: 10px;
+}
+
+.container p {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #2c3e50;
 }
 
 .button-content {
@@ -267,13 +276,13 @@ h1 {
     display: flex;
 }
 
-#points-container {
+.flex-container {
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
-#points-container p {
+.flex-container p {
     margin: 0;
     font-size: 1.2rem;
     color: #2c3e50;
