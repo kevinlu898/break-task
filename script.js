@@ -265,9 +265,6 @@ window.onload = () => {
     cornerCloseButton.addEventListener("click", closeAddTaskPopup);
   }
 
-  addTask("💀", 10);
-  addTask("hi", 10);
-  
   // Initial stats update
   updateStats();
 };
