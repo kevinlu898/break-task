@@ -4,7 +4,6 @@ Only empty dreams remain
 Local storage rules
 */
 
-
 /*
 localstorage:
 name -> the character's name
@@ -19,81 +18,86 @@ let activeTimer = null;
 let breakTimeTimer = null;
 
 // Add page detection at the start
-const isBreaksPage = window.location.pathname.includes('breaks.html');
+const isBreaksPage = window.location.pathname.includes("breaks.html");
 
 function formatTime(seconds) {
-    // Round to nearest second to avoid floating point issues
-    seconds = Math.round(seconds);
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+  // Round to nearest second to avoid floating point issues
+  seconds = Math.round(seconds);
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+  return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
 }
 
 function updateTaskTimer(taskId) {
-    const taskElement = document.getElementById(`task-item-${taskId}`);
-    if (!taskElement) return;
-    
-    const tasks = JSON.parse(localStorage.getItem("tasks"));
-    const task = tasks.find(t => t.id == taskId);
-    if (!task || !task.running) return;
+  const taskElement = document.getElementById(`task-item-${taskId}`);
+  if (!taskElement) return;
 
-    const now = Date.now();
-    const remainingTime = Math.max(0, (task.endTime - now) / 1000); // Convert to seconds
-    const timeText = taskElement.querySelector('.time-text');
-    timeText.textContent = `Time remaining: ${formatTime(remainingTime)}`;
+  const tasks = JSON.parse(localStorage.getItem("tasks"));
+  const task = tasks.find((t) => t.id == taskId);
+  if (!task || !task.running) return;
 
-    // If task is complete, handle completion
-    if (remainingTime <= 0) {
-        completeTask(taskId);
-    }
+  const now = Date.now();
+  const remainingTime = Math.max(0, (task.endTime - now) / 1000); // Convert to seconds
+  const timeText = taskElement.querySelector(".time-text");
+  timeText.textContent = `Time remaining: ${formatTime(remainingTime)}`;
+
+  // If task is complete, handle completion
+  if (remainingTime <= 0) {
+    completeTask(taskId);
+  }
 }
 
 function updateStats() {
-    const coins = Math.round(Number(localStorage.getItem("coins") || 0));
-    const breakTime = Number(localStorage.getItem("breakTime") || 0);
-    
-    // Update coins display
-    const coinsDisplay = document.querySelector('.flex-container p');
-    if (coinsDisplay) {
-        coinsDisplay.textContent = `${coins} coins`;
-    }
-    
-    // Update break time display
-    const breakTimeDisplay = document.querySelector('#points-container p');
-    if (breakTimeDisplay) {
-        // Round to avoid floating point issues
-        const roundedBreakTime = Math.round(breakTime * 60) / 60; // Round to nearest second
-        const minutes = Math.floor(Math.abs(roundedBreakTime));
-        const seconds = Math.floor((Math.abs(roundedBreakTime) - minutes) * 60);
-        const displayText = roundedBreakTime < 0 ? 
-            `Break time: -${minutes}:${seconds.toString().padStart(2, '0')} (${Math.abs(Math.round(roundedBreakTime))} coins debt)` : 
-            `Break time: ${minutes}:${seconds.toString().padStart(2, '0')}`;
-        breakTimeDisplay.textContent = displayText;
-    }
+  const coins = Math.round(Number(localStorage.getItem("coins") || 0));
+  const breakTime = Number(localStorage.getItem("breakTime") || 0);
+
+  // Update coins display
+  const coinsDisplay = document.querySelector(".flex-container p");
+  if (coinsDisplay) {
+    coinsDisplay.textContent = `${coins} coins`;
+  }
+
+  // Update break time display
+  const breakTimeDisplay = document.querySelector("#points-container p");
+  if (breakTimeDisplay) {
+    // Round to avoid floating point issues
+    const roundedBreakTime = Math.round(breakTime * 60) / 60; // Round to nearest second
+    const minutes = Math.floor(Math.abs(roundedBreakTime));
+    const seconds = Math.floor((Math.abs(roundedBreakTime) - minutes) * 60);
+    const displayText =
+      roundedBreakTime < 0
+        ? `Break time: -${minutes}:${seconds
+            .toString()
+            .padStart(2, "0")} (${Math.abs(
+            Math.round(roundedBreakTime)
+          )} coins debt)`
+        : `Break time: ${minutes}:${seconds.toString().padStart(2, "0")}`;
+    breakTimeDisplay.textContent = displayText;
+  }
 }
 
 function completeTask(taskId) {
-    const tasks = JSON.parse(localStorage.getItem("tasks"));
-    const task = tasks.find(t => t.id == taskId);
-    if (!task) return;
+  const tasks = JSON.parse(localStorage.getItem("tasks"));
+  const task = tasks.find((t) => t.id == taskId);
+  if (!task) return;
 
-    // Grant coins (1 coin per minute)
-    const coins = Math.round(Number(localStorage.getItem("coins") || 0));
-    const minutes = Math.ceil(task.time / 60);
-    localStorage.setItem("coins", coins + minutes);
+  // Grant coins (1 coin per minute)
+  const coins = Math.round(Number(localStorage.getItem("coins") || 0));
+  const minutes = Math.ceil(task.time / 60);
+  localStorage.setItem("coins", coins + minutes);
 
-    // Remove the task
-    const updatedTasks = tasks.filter(t => t.id != taskId);
-    localStorage.setItem("tasks", JSON.stringify(updatedTasks));
-    
-    // Clear timer
-    if (activeTimer) {
-        clearInterval(activeTimer);
-        activeTimer = null;
-    }
-    
-    render();
-    updateStats(); // Update stats after completing task
+  // Remove the task
+  const updatedTasks = tasks.filter((t) => t.id != taskId);
+  localStorage.setItem("tasks", JSON.stringify(updatedTasks));
+
+  // Clear timer
+  if (activeTimer) {
+    clearInterval(activeTimer);
+    activeTimer = null;
+  }
+
+  render();
+  updateStats(); // Update stats after completing task
 }
 
 function resetDefault() {
@@ -110,10 +114,14 @@ function render() {
   const thetasklist = document.getElementById("task_list");
   thetasklist.innerHTML = "";
   JSON.parse(localStorage.getItem("tasks")).forEach((element) => {
-    const isCompleted = element.running && element.endTime && Date.now() >= element.endTime;
-    const taskClass = isCompleted ? 'task-item completed' : 
-                     element.running ? 'task-item running' : 'task-item';
-    
+    const isCompleted =
+      element.running && element.endTime && Date.now() >= element.endTime;
+    const taskClass = isCompleted
+      ? "task-item completed"
+      : element.running
+      ? "task-item running"
+      : "task-item";
+
     // Calculate remaining time for display
     let timeDisplay;
     if (element.running && element.endTime) {
@@ -122,7 +130,7 @@ function render() {
     } else {
       timeDisplay = `Time needed: ${element.time} minutes`;
     }
-    
+
     if (!element.locked) {
       thetasklist.innerHTML += `
                 <div class="${taskClass}" id="task-item-${element.id}">
@@ -132,12 +140,21 @@ function render() {
                     <div class="task-widgets">
                         <p class="time-text">${timeDisplay}</p>
                         <div class="task-buttons">
-                            ${isCompleted ? 
-                                `<img class="svg-emblem" src="ass_ets/end_started_task_symbol.svg" alt="complete" onclick="completeTask(${element.id})"/>` :
-                                `<img class="svg-emblem" src="ass_ets/${element.running ? 'stop' : 'start_arrow'}.svg" alt="${element.running ? 'stop' : 'start'}" onclick="startTask(${element.id})"/>`
+                            ${
+                              isCompleted
+                                ? `<img class="svg-emblem" src="ass_ets/end_started_task_symbol.svg" alt="complete" onclick="completeTask(${element.id})"/>`
+                                : `<img class="svg-emblem" src="ass_ets/${
+                                    element.running ? "stop" : "start_arrow"
+                                  }.svg" alt="${
+                                    element.running ? "stop" : "start"
+                                  }" onclick="startTask(${element.id})"/>`
                             }
-                            <img class="svg-emblem" src="ass_ets/unlock.svg" alt="unlock" onclick="lockTask(${element.id})"/>
-                            <img class="svg-emblem" src="ass_ets/close-x.svg" alt="Remove" onclick="removeTask(${element.id})"/>
+                            <img class="svg-emblem" src="ass_ets/unlock.svg" alt="unlock" onclick="lockTask(${
+                              element.id
+                            })"/>
+                            <img class="svg-emblem" src="ass_ets/close-x.svg" alt="Remove" onclick="removeTask(${
+                              element.id
+                            })"/>
                         </div>
                     </div>
                 </div>`;
@@ -150,12 +167,21 @@ function render() {
                     <div class="task-widgets">
                         <p class="time-text">${timeDisplay}</p>
                         <div class="task-buttons">
-                            ${isCompleted ? 
-                                `<img class="svg-emblem" src="ass_ets/end_started_task_symbol.svg" alt="complete" onclick="completeTask(${element.id})"/>` :
-                                `<img class="svg-emblem" src="ass_ets/${element.running ? 'stop' : 'start_arrow'}.svg" alt="${element.running ? 'stop' : 'start'}" onclick="startTask(${element.id})"/>`
+                            ${
+                              isCompleted
+                                ? `<img class="svg-emblem" src="ass_ets/end_started_task_symbol.svg" alt="complete" onclick="completeTask(${element.id})"/>`
+                                : `<img class="svg-emblem" src="ass_ets/${
+                                    element.running ? "stop" : "start_arrow"
+                                  }.svg" alt="${
+                                    element.running ? "stop" : "start"
+                                  }" onclick="startTask(${element.id})"/>`
                             }
-                            <img class="svg-emblem" src="ass_ets/lock.svg" alt="lock" onclick="lockTask(${element.id})"/>
-                            <img class="svg-emblem" src="ass_ets/close-x.svg" alt="Remove" onclick="removeTask(${element.id})"/>
+                            <img class="svg-emblem" src="ass_ets/lock.svg" alt="lock" onclick="lockTask(${
+                              element.id
+                            })"/>
+                            <img class="svg-emblem" src="ass_ets/close-x.svg" alt="Remove" onclick="removeTask(${
+                              element.id
+                            })"/>
                         </div>
                     </div>
                 </div>`;
@@ -165,23 +191,26 @@ function render() {
 
 function addTask(name, time) {
   if (!name || !time) return; // Don't add if name or time is missing
-  
+
   const listrn = JSON.parse(localStorage.getItem("tasks") || "[]");
   const curid = Number(localStorage.getItem("id") || 0);
-  
+
   localStorage.setItem(
     "tasks",
-    JSON.stringify([...listrn, { 
-        name: name, 
-        id: curid, 
-        locked: false, 
-        time: time, 
+    JSON.stringify([
+      ...listrn,
+      {
+        name: name,
+        id: curid,
+        locked: false,
+        time: time,
         originalTime: time, // Store original time for coin calculation
         running: false,
-        lastUpdate: Date.now()
-    }])
+        lastUpdate: Date.now(),
+      },
+    ])
   );
-  
+
   localStorage.setItem("id", curid + 1);
   render();
   closeAddTaskPopup(); // Close the popup after adding
@@ -189,11 +218,13 @@ function addTask(name, time) {
 
 function removeTask(theid) {
   // Find the task element
-  const taskElement = document.querySelector(`[onclick="removeTask(${theid})"]`).closest('.task-item');
-  
+  const taskElement = document
+    .querySelector(`[onclick="removeTask(${theid})"]`)
+    .closest(".task-item");
+
   // Add the closing class to trigger the animation
-  taskElement.classList.add('closing');
-  
+  taskElement.classList.add("closing");
+
   // Wait for the animation to complete before removing the task
   setTimeout(() => {
     const listrn = JSON.parse(localStorage.getItem("tasks"));
@@ -207,7 +238,12 @@ function removeTask(theid) {
 
 function lockTask(theid) {
   const listrn = JSON.parse(localStorage.getItem("tasks"));
-  localStorage.setItem("tasks", JSON.stringify(listrn.map(x => x.id == theid ? {...x, locked: !x.locked} : x)));
+  localStorage.setItem(
+    "tasks",
+    JSON.stringify(
+      listrn.map((x) => (x.id == theid ? { ...x, locked: !x.locked } : x))
+    )
+  );
   render();
 }
 
@@ -226,113 +262,115 @@ function closeAddTaskPopup() {
 }
 
 function startBreakTimeTimer() {
-    if (breakTimeTimer) return; // Don't start if already running
-    
-    breakTimeTimer = setInterval(() => {
-        const breakTime = Number(localStorage.getItem("breakTime") || 0);
-        const coins = Math.round(Number(localStorage.getItem("coins") || 0));
-        
-        // Decrease break time by 1/60th of a minute (1 second)
-        const newBreakTime = Math.round((breakTime - (1/60)) * 60) / 60; // Round to nearest second
-        localStorage.setItem("breakTime", newBreakTime);
-        
-        // If break time goes negative, deduct coins every minute
-        if (newBreakTime < 0) {
-            // Calculate how many coins to deduct (1 coin per minute of debt)
-            const debtAmount = Math.abs(Math.floor(newBreakTime));
-            if (coins > 0) {
-                // Deduct all available coins up to the debt amount
-                const deduction = Math.min(coins, debtAmount);
-                localStorage.setItem("coins", coins - deduction);
-                // Reduce the debt by the amount deducted
-                localStorage.setItem("breakTime", newBreakTime + (deduction / 60));
-            }
-        }
-        
-        updateStats();
-    }, 1000); // Run every second
+  if (breakTimeTimer) return; // Don't start if already running
+
+  breakTimeTimer = setInterval(() => {
+    const breakTime = Number(localStorage.getItem("breakTime") || 0);
+    const coins = Math.round(Number(localStorage.getItem("coins") || 0));
+
+    // Decrease break time by 1/60th of a minute (1 second)
+    const newBreakTime = Math.round((breakTime - 1 / 60) * 60) / 60; // Round to nearest second
+    localStorage.setItem("breakTime", newBreakTime);
+
+    // If break time goes negative, deduct coins every minute
+    if (newBreakTime < 0) {
+      // Calculate how many coins to deduct (1 coin per minute of debt)
+      const debtAmount = Math.abs(Math.floor(newBreakTime));
+      if (coins > 0) {
+        // Deduct all available coins up to the debt amount
+        const deduction = Math.min(coins, debtAmount);
+        localStorage.setItem("coins", coins - deduction);
+        // Reduce the debt by the amount deducted
+        localStorage.setItem("breakTime", newBreakTime + deduction / 60);
+      }
+    }
+
+    updateStats();
+  }, 1000); // Run every second
 }
 
 function stopBreakTimeTimer() {
-    if (breakTimeTimer) {
-        clearInterval(breakTimeTimer);
-        breakTimeTimer = null;
-    }
+  if (breakTimeTimer) {
+    clearInterval(breakTimeTimer);
+    breakTimeTimer = null;
+  }
 }
 
 function startTask(theid) {
-    const tasks = JSON.parse(localStorage.getItem("tasks"));
-    const task = tasks.find(t => t.id == theid);
-    
-    if (!task) return;
-    
-    // If task is locked, redirect to locked.html
-    if (task.locked) {
-        window.location.href = `locked.html?name=${encodeURIComponent(task.name)}&time=${task.time}`;
-        return;
+  const tasks = JSON.parse(localStorage.getItem("tasks"));
+  const task = tasks.find((t) => t.id == theid);
+
+  if (!task) return;
+
+  // If task is locked, redirect to locked.html
+  if (task.locked) {
+    window.location.href = `locked.html?name=${encodeURIComponent(
+      task.name
+    )}&time=${task.time}`;
+    return;
+  }
+
+  // Clear any existing timer
+  if (activeTimer) {
+    clearInterval(activeTimer);
+    activeTimer = null;
+  }
+
+  // Stop break time timer when starting a task
+  stopBreakTimeTimer();
+
+  // Update tasks: toggle the clicked task and stop any other running tasks
+  tasks.forEach((t) => {
+    if (t.id == theid) {
+      t.running = !t.running;
+      if (t.running) {
+        // Store start and end times
+        const now = Date.now();
+        t.startTime = now;
+        t.endTime = now + t.time * 60 * 1000; // Convert minutes to milliseconds
+
+        // Start timer
+        activeTimer = setInterval(() => {
+          updateTaskTimer(theid);
+        }, 1000);
+      } else {
+        // Start break time timer when task is stopped
+        startBreakTimeTimer();
+      }
+    } else if (t.running) {
+      t.running = false;
     }
-    
-    // Clear any existing timer
-    if (activeTimer) {
-        clearInterval(activeTimer);
-        activeTimer = null;
-    }
-    
-    // Stop break time timer when starting a task
-    stopBreakTimeTimer();
-    
-    // Update tasks: toggle the clicked task and stop any other running tasks
-    tasks.forEach(t => {
-        if (t.id == theid) {
-            t.running = !t.running;
-            if (t.running) {
-                // Store start and end times
-                const now = Date.now();
-                t.startTime = now;
-                t.endTime = now + (t.time * 60 * 1000); // Convert minutes to milliseconds
-                
-                // Start timer
-                activeTimer = setInterval(() => {
-                    updateTaskTimer(theid);
-                }, 1000);
-            } else {
-                // Start break time timer when task is stopped
-                startBreakTimeTimer();
-            }
-        } else if (t.running) {
-            t.running = false;
-        }
-    });
-    
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-    render();
+  });
+
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+  render();
 }
 
 // Add this function to check task states
 function checkTaskStates() {
-    const tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
-    let tasksUpdated = false;
-    
-    tasks.forEach(task => {
-        if (task.running && task.endTime) {
-            const now = Date.now();
-            const remainingTime = Math.max(0, (task.endTime - now) / 1000); // Convert to seconds
-            
-            // If task is complete, grant coins
-            if (remainingTime <= 0) {
-                const coins = Math.round(Number(localStorage.getItem("coins") || 0));
-                const minutes = Math.ceil(task.originalTime / 60);
-                localStorage.setItem("coins", coins + minutes);
-                task.running = false;
-                tasksUpdated = true;
-            }
-        }
-    });
-    
-    if (tasksUpdated) {
-        localStorage.setItem("tasks", JSON.stringify(tasks));
-        render();
+  const tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
+  let tasksUpdated = false;
+
+  tasks.forEach((task) => {
+    if (task.running && task.endTime) {
+      const now = Date.now();
+      const remainingTime = Math.max(0, (task.endTime - now) / 1000); // Convert to seconds
+
+      // If task is complete, grant coins
+      if (remainingTime <= 0) {
+        const coins = Math.round(Number(localStorage.getItem("coins") || 0));
+        const minutes = Math.ceil(task.originalTime / 60);
+        localStorage.setItem("coins", coins + minutes);
+        task.running = false;
+        tasksUpdated = true;
+      }
     }
+  });
+
+  if (tasksUpdated) {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+    render();
+  }
 }
 
 window.onload = () => {
@@ -343,13 +381,13 @@ window.onload = () => {
   if (!localStorage.getItem("id")) {
     localStorage.setItem("id", 0);
   }
-  
+
   // Check task states when loading the page
   checkTaskStates();
-  
+
   // Get current tasks
   const tasks = JSON.parse(localStorage.getItem("tasks"));
-  
+
   // Clear any existing timers
   if (activeTimer) {
     clearInterval(activeTimer);
@@ -359,13 +397,13 @@ window.onload = () => {
     clearInterval(breakTimeTimer);
     breakTimeTimer = null;
   }
-  
+
   // Start appropriate timer based on task state
-  if (!tasks.some(task => task.running)) {
+  if (!tasks.some((task) => task.running)) {
     startBreakTimeTimer();
   } else {
     // Restart timer for any running tasks
-    tasks.forEach(task => {
+    tasks.forEach((task) => {
       if (task.running && task.endTime) {
         activeTimer = setInterval(() => {
           updateTaskTimer(task.id);
@@ -373,7 +411,7 @@ window.onload = () => {
       }
     });
   }
-  
+
   // Only initialize task-related elements if we're on the main page
   if (!isBreaksPage) {
     // Add event listener for the Create Task button
@@ -381,14 +419,18 @@ window.onload = () => {
     if (createTaskButton) {
       createTaskButton.addEventListener("click", openAddTaskPopup);
     }
-    
+
     // Add event listener for the add task button
     const addTaskButton = document.getElementById("add_task_popup_button");
     if (addTaskButton) {
       addTaskButton.addEventListener("click", () => {
-        const nameInput = document.querySelector("#add_task_input[type='text']");
-        const timeInput = document.querySelector("#add_task_input[type='number']");
-        
+        const nameInput = document.querySelector(
+          "#add_task_input[type='text']"
+        );
+        const timeInput = document.querySelector(
+          "#add_task_input[type='number']"
+        );
+
         if (nameInput && timeInput) {
           addTask(nameInput.value, parseInt(timeInput.value));
           // Clear inputs after adding
@@ -399,13 +441,17 @@ window.onload = () => {
     }
 
     // Add event listener for the close button
-    const closeButton = document.querySelector("#add_task_popup_close_button img");
+    const closeButton = document.querySelector(
+      "#add_task_popup_close_button img"
+    );
     if (closeButton) {
       closeButton.addEventListener("click", closeAddTaskPopup);
     }
 
     // Add event listener for the X in the corner
-    const cornerCloseButton = document.querySelector("#add_task_popup_cancel_button");
+    const cornerCloseButton = document.querySelector(
+      "#add_task_popup_cancel_button"
+    );
     if (cornerCloseButton) {
       cornerCloseButton.addEventListener("click", closeAddTaskPopup);
     }
