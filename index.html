@@ -16,10 +16,7 @@
         <div id="left_dashboard" class="dashboard blue-gradient-bg">
             <h1>BreakTask</h1>
             <div id="action_sidebar">
-
-
-
-                <div id="create_task_button" class="button">
+                <div id="create_task_button" class="button full-width">
                     <div class="button-content">
                         <div id="create_task_button_emblem" class="emblem">+</div>
                         <div id="create_task_button_emblem_text" class="button-text">
@@ -27,7 +24,7 @@
                         </div>
                     </div>
                 </div>
-                <div id="lock_schedule_button" class="button">
+                <div id="lock_schedule_button" class="button full-width">
                     <div class="button-content">
                         <div id="lock_schedule_button_emblem" class="emblem-container-no-fullwidth">
                             <img src="ass_ets/lock.svg" alt="lock" class="svg-emblem">
@@ -42,11 +39,9 @@
                 <div id="player_stats_title" class="button-text">
                     <p>Player Stats</p>
                 </div>
-                <div id="points-container" class="display"></div>
-                    <div id="points-container-emblem" class="emblem">💰</div>
-                    <div id="points-container-text" class="button-text">
-                        <p>Points: </p>
-                    </div>
+                <div id="points-container" class="emblem-container flex-display">
+                    <div id="points-container-emblem" class="svg-emblem">💰</div>
+                    <p>Coins: </p>
                 </div>
             </div>
 
@@ -61,6 +56,23 @@
             <div id="task_list" class="gray-bg">
                 <!--styling div in HTML to be moved to JS-->
                 <div class="task-item">
+                </div>
+            </div>
+        </div>
+
+        <div id="add_task_popup_overlay" class="overlay"></div>
+        <div id="add_task_popup" class="blue-gradient-bg popup">
+            <div id="add_task_popup_title">
+                <h1>Add Task</h1>
+                <div id="add_task_input_container" class="input-container">
+                    <input type="text" id="add_task_input" placeholder="Task name">
+                    <input type="number" id="add_task_input" placeholder="Time needed">
+                </div>
+                <div id="add_task_popup_button" class="button full-width">
+                    Add Task
+                </div>
+                <div id="add_task_popup_close_button top-margin-space" class="emblem-container justify-right">
+                    <img src="ass_ets/close-x.svg" alt="close" class="svg-emblem">
                 </div>
             </div>
         </div>

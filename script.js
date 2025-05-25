@@ -39,6 +39,8 @@ function render() {
                     ${element.name}
                     <div class="emblem-container justify-right">
                       <div class="emblem-container-inner">
+                        <p class="time-text">Time needed: ${element.time} minutes</p>
+                        <img class="svg-emblem" src="ass_ets/start_arrow.svg" alt="start"/>
                         <img class="svg-emblem" src="ass_ets/unlock.svg" alt="unlock" onclick="lockTask(${element.id})"/>
                         <img class="svg-emblem" src="ass_ets/close-x.svg" alt="Remove" onclick="removeTask(${element.id})"/>
                     </div>
@@ -49,6 +51,8 @@ function render() {
                     ${element.name}
                     <div class="emblem-container justify-right">
                       <div class="emblem-container-inner">
+                        <p class="time-text">Time needed: ${element.time} minutes</p>
+                        <img class="svg-emblem" src="ass_ets/start_arrow.svg" alt="start"/>
                         <img class="svg-emblem" src="ass_ets/lock.svg" alt="lock" onclick="lockTask(${element.id})"/>
                         <img class="svg-emblem" src="ass_ets/close-x.svg" alt="Remove" onclick="removeTask(${element.id})"/>
                     </div>
@@ -61,7 +65,7 @@ function addTask(name) {
   const listrn = JSON.parse(localStorage.getItem("tasks"));
   localStorage.setItem(
     "tasks",
-    JSON.stringify([...listrn, { name: name, id: localStorage.getItem`id`, locked: false}])
+    JSON.stringify([...listrn, { name: name, id: localStorage.getItem`id`, locked: false, time: 0}])
   );
   const curid = Number(localStorage.getItem("id"));
   localStorage.setItem("id", curid + 1);
@@ -69,12 +73,21 @@ function addTask(name) {
 }
 
 function removeTask(theid) {
-  const listrn = JSON.parse(localStorage.getItem("tasks"));
-  localStorage.setItem(
-    "tasks",
-    JSON.stringify(listrn.filter((x) => x.id != theid))
-  );
-  render();
+  // Find the task element
+  const taskElement = document.querySelector(`[onclick="removeTask(${theid})"]`).closest('.task-item');
+  
+  // Add the closing class to trigger the animation
+  taskElement.classList.add('closing');
+  
+  // Wait for the animation to complete before removing the task
+  setTimeout(() => {
+    const listrn = JSON.parse(localStorage.getItem("tasks"));
+    localStorage.setItem(
+      "tasks",
+      JSON.stringify(listrn.filter((x) => x.id != theid))
+    );
+    render();
+  }, 300); // 300ms matches the animation duration
 }
 
 function lockTask(theid) {
