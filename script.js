@@ -99,10 +99,4 @@ function lockTask(theid) {
 window.onload = () => {
   localStorage.setItem("tasks", "[]");
   localStorage.setItem("id", 0);
-  // if (localStorage.getItem("name") == null) {
-  //   window.location.href = "/intro.html";
-  // }
-
-  addTask("💀");
-  addTask("hi");
 };

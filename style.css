@@ -12,6 +12,7 @@ h1 {
     font-weight: 600;
     color: #2c3e50;
     margin: 0;
+    margin-top: 30px;
 }
 
 
@@ -47,6 +48,7 @@ h1 {
     font-size: 1.5rem;
     font-weight: 600;
     color: #3687ff;
+    margin-left: 20px;
 }
 
 .display {
@@ -180,6 +182,7 @@ h1 {
     height: 1.5rem;
     filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(190deg) brightness(100%) contrast(119%);
     transition: filter 0.2s ease;
+    margin-left: 10px;
     cursor: pointer;
 }
 
